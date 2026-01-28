@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import SignUp from './pages/SignUp';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import PlanForm from './features/plans/PlanForm';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/" element={<Home />} />  
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/planform" element={<PlanForm />} />
       </Routes>
     </Router>
     </>
