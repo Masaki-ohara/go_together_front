@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 type FormValues = {
+  title: string;
   date: Date | null;
   location: string;
   budget: number;
@@ -38,6 +39,7 @@ export default function PlanForm() {
   const onSubmit = async (data: FormValues) => {
     try {
       const payload = {
+        title: data.title,
         date: data.date,
         location: data.location,
         budget: data.budget,
@@ -63,7 +65,7 @@ export default function PlanForm() {
     } catch (error) {
       setSubmitStatus("error");
       setErrorMessage("プランの作成に失敗しました");
-      toast.error("サーバーエラーが発生しました");
+      toast.error("プランの作成に失敗しました");
     }
   };
 
@@ -110,6 +112,28 @@ export default function PlanForm() {
           {errors.date && (
             <p className="text-red-500 text-sm">{errors.date.message}</p>
           )}
+        </div>
+
+        <div>
+          <label className="block mb-3 text-sm font-medium">
+            プラン名
+            <span className="mr-2 shrink-0 text-white bg-red-500 text-xs px-2 py-0.5 rounded ml-2">
+              必須
+            </span>
+          </label>
+          <input
+            type="text"
+            placeholder="プラン名（例：お台場デート）"
+            {...register("title", {
+              required: "プラン名は必須です",
+            })}
+            className="bg-gray-300 appearance-none border-2 border-gray-400 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 transition duration-200"
+          />
+          <div>
+            {errors.title && (
+              <p className="text-red-500 text-sm">{errors.title.message}</p>
+            )}
+          </div>
         </div>
 
         <div>
