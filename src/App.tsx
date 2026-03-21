@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import PlanForm from "./features/plans/PlanForm";
 import PlanList from "./features/plans/PlanList";
 import PlanDetail from "./features/plans/PlanDetail";
+import PlanEditForm from "./features/plans/PlanEditForm";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/planform" element={<PlanForm />} />
           <Route path="/planlist" element={<PlanList />} />
           <Route path="/plans/:id" element={<PlanDetail />} />
+          <Route path="/plans/:id/edit" element={<PlanEditForm />} />
         </Routes>
       </Router>
     </>
