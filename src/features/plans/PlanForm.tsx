@@ -13,6 +13,8 @@ type FormValues = {
   list1: string;
   list2: string;
   list3: string;
+  list4: string;
+  list5: string;
 };
 
 export default function PlanForm() {
@@ -25,7 +27,7 @@ export default function PlanForm() {
     formState: { errors },
   } = useForm<FormValues>();
 
-  const [subimtStatus, setSubmitStatus] = useState<
+  const [submitStatus, setSubmitStatus] = useState<
     "idle" | "success" | "error"
   >("idle");
 
@@ -43,7 +45,7 @@ export default function PlanForm() {
         date: data.date,
         location: data.location,
         budget: data.budget,
-        lists: [data.list1, data.list2, data.list3],
+        lists: [data.list1, data.list2, data.list3, data.list4, data.list5],
       };
 
       const response = await fetch("http://localhost:3000/api/v1/plans", {
@@ -73,13 +75,13 @@ export default function PlanForm() {
     <div className="max-w-lg mx-auto space-y-6">
       <h2 className="text-xl font-bold">プラン作成</h2>
 
-      {subimtStatus === "success" && (
+      {submitStatus === "success" && (
         <div className="p-4 mb-4 text-green-800 bg-green-200 rounded">
           プランが正常に作成されました！
         </div>
       )}
 
-      {subimtStatus === "error" && (
+      {submitStatus === "error" && (
         <div className="p-4 mb-4 text-red-800 bg-red-200 rounded">
           {errorMessage}
         </div>
@@ -235,6 +237,48 @@ export default function PlanForm() {
             type="text"
             placeholder="したいことを入力してください"
             {...register("list3", {
+              //   required: "3つ目は必須です",
+            })}
+            className="bg-gray-200 appearance-none border-2 border-gray-400 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 transition duration-200"
+          />
+          {/* {errors.list3 && (
+            <p className="text-red-500 text-sm">
+              {errors.list3.message}
+            </p>
+          )} */}
+        </div>
+
+        <div>
+          <label className="block mb-3 text-sm font-medium">したいこと④</label>
+          {/* <span className="text-white bg-red-500 text-xs px-2 py-0.5 rounded">
+              必須
+            </span> */}
+
+          <input
+            type="text"
+            placeholder="したいことを入力してください"
+            {...register("list4", {
+              //   required: "3つ目は必須です",
+            })}
+            className="bg-gray-200 appearance-none border-2 border-gray-400 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 transition duration-200"
+          />
+          {/* {errors.list3 && (
+            <p className="text-red-500 text-sm">
+              {errors.list3.message}
+            </p>
+          )} */}
+        </div>
+
+        <div>
+          <label className="block mb-3 text-sm font-medium">したいこと⑤</label>
+          {/* <span className="text-white bg-red-500 text-xs px-2 py-0.5 rounded">
+              必須
+            </span> */}
+
+          <input
+            type="text"
+            placeholder="したいことを入力してください"
+            {...register("list5", {
               //   required: "3つ目は必須です",
             })}
             className="bg-gray-200 appearance-none border-2 border-gray-400 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 transition duration-200"
