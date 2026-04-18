@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
+  const navigate = useNavigate();
   const [title, setTitle] = useState(plan.title);
   const [location, setLocation] = useState(plan.location);
   const [budget, setBudget] = useState(plan.budget);
@@ -63,18 +65,56 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
         })),
       };
 
+      //     const response = await fetch(
+      //       `http://localhost:3000/api/v1/plans/${plan.id}`,
+      //       {
+      //         method: "PUT",
+      //         headers: {
+      //           "Content-Type": "application/json",
+      //         },
+      //         body: JSON.stringify({
+      //           plan: payload,
+      //         }),
+      //       },
+      //     );
+
+      //     if (!response.ok) {
+      //       throw new Error("更新に失敗しました");
+      //     }
+
+      //     const updatedPlan = await response.json();
+      //     onUpdate(updatedPlan);
+      //     onCancel();
+      //   } catch (error) {
+      //     console.error("プランの更新に失敗しました", error);
+      //   }
+      // };
       const response = await fetch(
         `http://localhost:3000/api/v1/plans/${plan.id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            // --- 認証ヘッダーを追加 ---
+            "access-token": localStorage.getItem("access-token") || "",
+            client: localStorage.getItem("client") || "",
+            uid: localStorage.getItem("uid") || "",
           },
           body: JSON.stringify({
             plan: payload,
           }),
         },
       );
+
+      // --- 401エラー（ログイン切れ）のハンドリング ---
+      if (response.status === 401) {
+        alert("セッションが切れました。ログインし直してください。");
+        localStorage.removeItem("access-token");
+        localStorage.removeItem("uid");
+        localStorage.removeItem("client");
+        navigate("/login");
+        return;
+      }
 
       if (!response.ok) {
         throw new Error("更新に失敗しました");
@@ -85,6 +125,7 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
       onCancel();
     } catch (error) {
       console.error("プランの更新に失敗しました", error);
+      alert("プランの更新に失敗しました");
     }
   };
 

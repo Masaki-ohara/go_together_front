@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 
 type FormValues = {
   title: string;
@@ -19,6 +20,8 @@ type FormValues = {
 
 export default function PlanForm() {
   const navigate = useNavigate();
+
+  const { groupId } = useParams<{ groupId: string }>();
 
   const {
     register,
@@ -48,20 +51,26 @@ export default function PlanForm() {
         lists: [data.list1, data.list2, data.list3, data.list4, data.list5],
       };
 
-      const response = await fetch("http://localhost:3000/api/v1/plans", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `http://localhost:3000/api/v1/groups/${groupId}/plans`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "access-token": localStorage.getItem("access-token") || "",
+            client: localStorage.getItem("client") || "",
+            uid: localStorage.getItem("uid") || "",
+          },
+          body: JSON.stringify(payload),
         },
-        body: JSON.stringify(payload),
-      });
+      );
 
       if (!response.ok) {
         throw new Error("送信に失敗しました");
       }
       toast.success("プランが正常に作成されました 🎉");
       setTimeout(() => {
-        navigate("/");
+        navigate(`/groups/${groupId}/plans`);
       }, 1500);
       setSubmitStatus("success");
     } catch (error) {

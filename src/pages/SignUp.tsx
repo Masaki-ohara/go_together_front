@@ -40,10 +40,15 @@ export default function SignUp() {
       console.log(result);
 
       if (!res.ok) {
-        // ❌ 失敗時は遷移しない
         toast.error(result.message || "登録に失敗しました");
         return;
       }
+      localStorage.setItem(
+        "access-token",
+        res.headers.get("access-token") || "",
+      );
+      localStorage.setItem("client", res.headers.get("client") || "");
+      localStorage.setItem("uid", res.headers.get("uid") || "");
 
       // ✅ 成功したら
       toast.success("ユーザー登録が完了しました 🎉");

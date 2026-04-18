@@ -5,19 +5,21 @@ import Sidebar from "./Sidebar";
 
 export default function Home() {
   return (
-    <div className="h-screen flex flex-col">
-      {/* Header */}
-      <Header />
+    // <div className="h-screen flex flex-col">
+    //   {/* Header */}
+    //   <Header />
 
-      {/* Body */}
-      <div className="flex flex-1">
-        <Sidebar />
+    //   {/* Body */}
+    //   <div className="flex flex-1">
+    //     <Sidebar />
 
-        <main className="flex-1 p-4 bg-white">
-          <h1 className="text-2xl font-bold">Home Page</h1>
-          <a href="/planform">Go to Plan Form</a>
-        </main>
-      </div>
-    </div>
+    <main className="flex-1 p-4 bg-white">
+      <h1 className="text-2xl font-bold">Home Page</h1>
+      <a href="/creategroup" className="ml-4">
+        グループ作成
+      </a>
+    </main>
+    //   </div>
+    // </div>
   );
 }

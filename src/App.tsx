@@ -12,6 +12,9 @@ import PlanForm from "./features/plans/PlanForm";
 import PlanList from "./features/plans/PlanList";
 import PlanDetail from "./features/plans/PlanDetail";
 import PlanEditForm from "./features/plans/PlanEditForm";
+import CreateGroups from "./features/groups/CreateGroups";
+import GroupList from "./features/groups/GroupList";
+import Layout from "./components/Layout";
 
 function App() {
   return (
@@ -19,13 +22,19 @@ function App() {
       <ToastContainer position="top-right" autoClose={3000} />
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          {/* Layoutで包むグループ */}
+          <Route element={<Layout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/plans/:id" element={<PlanDetail />} />
+            <Route path="/plans/:id/edit" element={<PlanEditForm />} />
+            <Route path="/creategroup" element={<CreateGroups />} />
+            <Route path="/groups" element={<GroupList />} />
+            <Route path="/groups/:groupId/plans" element={<PlanList />} />
+            <Route path="/groups/:groupId/plans/new" element={<PlanForm />} />
+          </Route>
+
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/planform" element={<PlanForm />} />
-          <Route path="/planlist" element={<PlanList />} />
-          <Route path="/plans/:id" element={<PlanDetail />} />
-          <Route path="/plans/:id/edit" element={<PlanEditForm />} />
         </Routes>
       </Router>
     </>
