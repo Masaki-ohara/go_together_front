@@ -50,7 +50,6 @@ export default function SignUp() {
       localStorage.setItem("client", res.headers.get("client") || "");
       localStorage.setItem("uid", res.headers.get("uid") || "");
 
-      // ✅ 成功したら
       toast.success("ユーザー登録が完了しました 🎉");
 
       setTimeout(() => {

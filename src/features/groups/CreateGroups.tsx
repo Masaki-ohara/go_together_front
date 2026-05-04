@@ -131,7 +131,6 @@ export default function CreateGroup() {
         }),
       });
 
-      // --- ここから追加・修正したバリデーション ---
       if (res.status === 401) {
         // サーバーから「認証不可」が返ってきた場合
         alert("セッションが切れました。もう一度ログインしてください。");
@@ -141,7 +140,6 @@ export default function CreateGroup() {
         navigate("/login");
         return;
       }
-      // --- ここまで ---
 
       // トークンの更新保存
       saveAuthHeaders(res);

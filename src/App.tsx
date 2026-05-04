@@ -15,6 +15,7 @@ import PlanEditForm from "./features/plans/PlanEditForm";
 import CreateGroups from "./features/groups/CreateGroups";
 import GroupList from "./features/groups/GroupList";
 import Layout from "./components/Layout";
+import JoinGroup from "./features/groups/JoinGroup";
 
 function App() {
   return (
@@ -31,6 +32,11 @@ function App() {
             <Route path="/groups" element={<GroupList />} />
             <Route path="/groups/:groupId/plans" element={<PlanList />} />
             <Route path="/groups/:groupId/plans/new" element={<PlanForm />} />
+            <Route
+              path="/groups/:groupId/plans/:planId/edit"
+              element={<PlanEditForm />}
+            />
+            <Route path="/groups/join" element={<JoinGroup />} />
           </Route>
 
           <Route path="/signup" element={<SignUp />} />
