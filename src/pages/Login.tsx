@@ -41,8 +41,31 @@ export default function Login() {
         localStorage.setItem("client", headers["client"]);
         localStorage.setItem("uid", headers["uid"]);
 
+        const userData = res.data.data;
+
+        // if (res.data && res.data.data && res.data.data.name) {
+        //   localStorage.setItem("name", res.data.data.name);
+        // } else {
+        //   localStorage.setItem("name", res.data.data.email);
+        // }
+
+        // toast.success("ログインしました 🎉");
+        // navigate("/");
+        if (res.data && res.data.data && res.data.data.name) {
+          localStorage.setItem("name", res.data.data.name);
+        } else {
+          localStorage.setItem("name", res.data.data.email);
+        }
+
+        // 👇【追加】プロフィール画像も同時に保存してヘッダーに即反映させる
+        if (res.data && res.data.data && res.data.data.image) {
+          localStorage.setItem("user-image", res.data.data.image);
+        }
+
         toast.success("ログインしました 🎉");
-        navigate("/");
+
+        // 👇【変更】navigate("/") からこれに書き換える！
+        window.location.href = "/";
       } else {
         console.error("認証ヘッダーがレスポンスに含まれていません", headers);
         toast.error("ログインは成功しましたが、認証情報を取得できませんでした");

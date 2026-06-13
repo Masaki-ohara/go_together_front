@@ -16,6 +16,7 @@ import CreateGroups from "./features/groups/CreateGroups";
 import GroupList from "./features/groups/GroupList";
 import Layout from "./components/Layout";
 import JoinGroup from "./features/groups/JoinGroup";
+import GroupDetail from "./features/groups/GroupDetail";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
               element={<PlanEditForm />}
             />
             <Route path="/groups/join" element={<JoinGroup />} />
+            <Route path="/groups/:id" element={<GroupDetail />} />
           </Route>
 
           <Route path="/signup" element={<SignUp />} />
