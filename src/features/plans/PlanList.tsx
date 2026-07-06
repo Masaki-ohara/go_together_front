@@ -258,6 +258,12 @@ export default function PlanList() {
             プラン作成
           </button>
         </div>
+        <Link
+          to={`/groups/${groupId}/vote`}
+          className="inline-block bg-sky-500 text-white px-4 py-2 rounded text-sm font-medium hover:bg-sky-600 transition-colors shadow w-full sm:w-auto text-center"
+        >
+          🗳️ グループの投票ページへ
+        </Link>
       </div>
     </div>
   );
