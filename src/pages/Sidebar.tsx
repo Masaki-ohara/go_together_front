@@ -41,7 +41,7 @@ export default function Sidebar() {
             groups.map((group) => (
               <li key={group.id}>
                 <Link
-                  to={`/groups/${group.id}`}
+                  to={`/groups/${group.id}/plans`}
                   className="block p-2 hover:bg-gray-700 rounded transition"
                 >
                   📁 {group.name}

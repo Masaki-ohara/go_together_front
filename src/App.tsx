@@ -17,6 +17,7 @@ import GroupList from "./features/groups/GroupList";
 import Layout from "./components/Layout";
 import JoinGroup from "./features/groups/JoinGroup";
 import GroupDetail from "./features/groups/GroupDetail";
+import Vote from "./features/votes/Vote";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             />
             <Route path="/groups/join" element={<JoinGroup />} />
             <Route path="/groups/:id" element={<GroupDetail />} />
+            <Route path="/groups/:groupId/vote" element={<Vote />} />
           </Route>
 
           <Route path="/signup" element={<SignUp />} />
