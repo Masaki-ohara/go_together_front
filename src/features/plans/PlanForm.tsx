@@ -5,6 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
+import BackButton from "../../components/common/BackButton";
 
 type FormValues = {
   title: string;
@@ -80,6 +81,8 @@ export default function PlanForm() {
     }
   };
 
+  const today = new Date().toLocaleDateString("sv-SE");
+
   return (
     <div className="max-w-lg mx-auto space-y-6">
       <h2 className="text-xl font-bold">プラン作成</h2>
@@ -111,6 +114,7 @@ export default function PlanForm() {
             rules={{ required: "日付は必須です" }}
             render={({ field }) => (
               <DatePicker
+                minDate={today}
                 selected={field.value}
                 onChange={field.onChange}
                 placeholderText="日付を選択してください"
@@ -306,6 +310,7 @@ export default function PlanForm() {
           Submit
         </button>
       </form>
+      <BackButton />
     </div>
   );
 }

@@ -164,9 +164,10 @@
 //     </>
 //   );
 // }
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { saveAuthHeaders } from "../../utils/auth";
+import Deadline from "../votes/Deadline";
 
 interface Plan {
   id: number;
@@ -178,6 +179,7 @@ export default function PlanList() {
   const numericGroupId = Number(groupId);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [error, setError] = useState<string>("");
+  const [groupDeadline, setGroupDeadline] = React.useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -208,8 +210,23 @@ export default function PlanList() {
         saveAuthHeaders(res);
 
         const data = await res.json();
-        if (Array.isArray(data)) {
-          setPlans(data);
+        console.log("Railsから届いたデータ:", data);
+
+        // 🎯 Railsの `{ plans: ..., deadline: ... }` という形に完全に合わせます
+        if (data && typeof data === "object") {
+          // 1. 締め切り日をセット
+          setGroupDeadline(data.deadline || null);
+
+          // 2. プランをセット（Railsの location を title に変換して格納）
+          if (Array.isArray(data.plans)) {
+            const formattedPlans = data.plans.map((p: any) => ({
+              id: p.id,
+              title: p.location,
+            }));
+            setPlans(formattedPlans);
+          } else {
+            setPlans([]);
+          }
         } else {
           setPlans([]);
         }
@@ -228,6 +245,12 @@ export default function PlanList() {
       <div className="grid grid-cols-1 gap-4">
         {error && <p className="text-red-500">{error}</p>}
 
+        <p>グループの投票締め切り日</p>
+        <div className="mb-4">
+          {groupDeadline
+            ? groupDeadline.substring(0, 10)
+            : "設定されていません。"}
+        </div>
         {plans.length === 0 && !error ? (
           <p>プランがありません</p>
         ) : (
@@ -258,6 +281,13 @@ export default function PlanList() {
             プラン作成
           </button>
         </div>
+        <Link
+          to={`/groups/${groupId}/deadline`}
+          className="inline-block bg-green-500 text-white px-4 py-2 rounded text-sm font-medium hover:bg-green-600 transition-colors shadow w-full sm:w-auto text-center"
+        >
+          ⏰ グループの締め切り設定ページへ
+        </Link>
+
         <Link
           to={`/groups/${groupId}/vote`}
           className="inline-block bg-sky-500 text-white px-4 py-2 rounded text-sm font-medium hover:bg-sky-600 transition-colors shadow w-full sm:w-auto text-center"
