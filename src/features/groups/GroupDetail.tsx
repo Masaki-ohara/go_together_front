@@ -79,6 +79,7 @@
 // }
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; // URLのIDを取得するため
+import { Link } from "react-router-dom"; // プラン一覧へのリンク用
 
 export default function GroupDetail() {
   // ⭕️ ルーティングの設定に合わせて 'groupId' で受け取るように修正！
@@ -157,6 +158,14 @@ export default function GroupDetail() {
       {group.users?.length === 0 && (
         <p className="text-gray-400">メンバーはいません</p>
       )}
+      <div className="mt-6">
+        <Link
+          to={`/groups/${group.id}/plans`}
+          className="block p-2 hover:bg-gray-700 rounded transition"
+        >
+          📝 プラン一覧
+        </Link>
+      </div>
     </div>
   );
 }

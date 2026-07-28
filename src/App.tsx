@@ -19,6 +19,7 @@ import JoinGroup from "./features/groups/JoinGroup";
 import GroupDetail from "./features/groups/GroupDetail";
 import Vote from "./features/votes/Vote";
 import Deadline from "./features/votes/Deadline";
+import VoteRanking from "./features/votes/VoteRanking";
 
 function App() {
   return (
@@ -40,9 +41,17 @@ function App() {
               element={<PlanEditForm />}
             />
             <Route path="/groups/join" element={<JoinGroup />} />
-            <Route path="/groups/:id" element={<GroupDetail />} />
+            <Route path="/groups/:groupId" element={<GroupDetail />} />
             <Route path="/groups/:groupId/vote" element={<Vote />} />
             <Route path="/groups/:groupId/deadline" element={<Deadline />} />
+            <Route
+              path="/groups/:groupId/voteRanking"
+              element={<VoteRanking />}
+            />
+            <Route
+              path="/groups/:groupId/vote/ranking"
+              element={<VoteRanking />}
+            />
           </Route>
 
           <Route path="/signup" element={<SignUp />} />

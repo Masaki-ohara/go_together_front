@@ -1,10 +1,11 @@
-// Sidebar.tsx
 import React from "react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export default function Sidebar() {
   const [groups, setGroups] = useState<any[]>([]);
+  const location = useLocation();
 
   useEffect(() => {
     // ログインしている場合のみ取得
@@ -27,7 +28,7 @@ export default function Sidebar() {
     };
 
     fetchGroups();
-  }, []);
+  }, [location]);
 
   return (
     // return <aside className="w-64 bg-gray-200 p-4">Sidebar</aside>;
@@ -41,7 +42,7 @@ export default function Sidebar() {
             groups.map((group) => (
               <li key={group.id}>
                 <Link
-                  to={`/groups/${group.id}/plans`}
+                  to={`/groups/${group.id}`}
                   className="block p-2 hover:bg-gray-700 rounded transition"
                 >
                   📁 {group.name}
