@@ -30,10 +30,6 @@ export default function Vote() {
 
   // 🎯 RailsのAPIを叩いて投票する関数
   const handleVote = async (planId: number) => {
-    // 💡 1. 押した瞬間にサクセスメッセージを表示
-    setSuccess(true);
-    const timeoutId = setTimeout(() => setSuccess(false), 3000);
-
     // 💡 2. 押した瞬間に、画面の数値を即座に「+1」する（これで変わります！）
     setPlans((prevPlans) =>
       prevPlans.map((plan) =>
@@ -62,9 +58,15 @@ export default function Vote() {
         },
       );
 
+      // ⭕ 成功時（1回目）の処理の中にメッセージ表示を組み込む
+      if (response.ok) {
+        setSuccess(true); // ✨ ここで初めてメッセージを表示する！
+        setTimeout(() => setSuccess(false), 3000); // 3秒後に消すタイマーもここへ移動
+      }
+
       // 💡 4. 万が一 Rails 側で保存に失敗した場合は、数値を「-1」して元に戻す
       if (!response.ok) {
-        clearTimeout(timeoutId);
+        // clearTimeout(timeoutId);
         setSuccess(false);
 
         setPlans((prevPlans) =>

@@ -145,7 +145,26 @@ export default function CreateGroup() {
       saveAuthHeaders(res);
 
       if (res.ok) {
-        navigate("/groups");
+        // ⭕️ サーバーからレスポンスのデータを解析して、新しいグループの ID を取得
+        const result = await res.json();
+
+        // ⭕️ 作成したグループの「プラン一覧」へ直接ジャンプさせる！
+        // （メンバー一覧に飛ばしたい場合は `/groups/${newGroup.id}` に変更してください）
+        // ⭕️ result.group.id または result.id のどちらからでもIDを取り出せるようにする
+        const newGroupId = result.group?.id || result.id;
+
+        if (newGroupId) {
+          // ⭕️ 取得したIDを使って、そのグループのプラン一覧へ移動！
+          navigate(`/groups/${newGroupId}`);
+        } else {
+          // 万が一IDが取れなかった場合はログを出して一覧へ
+          console.error(
+            "レスポンスからグループIDが検出できませんでした:",
+            result,
+          );
+          navigate("/groups");
+        }
+        // navigate("/groups");
       } else {
         const result = await res.json();
         console.error("エラーが発生しました:", result);
