@@ -7,6 +7,7 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
   const [location, setLocation] = useState(plan.location);
   const [budget, setBudget] = useState(plan.budget);
   const [items, setItems] = useState(plan.plan_items || []);
+  const [time, setTime] = useState(plan.time || "");
 
   const addItem = () => {
     if (items.length >= 5) {
@@ -19,6 +20,17 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
   const updateItem = (index: number, value: string) => {
     const newItems = [...items];
     newItems[index].content = value;
+    setItems(newItems);
+  };
+
+  // const updateTime = (value: string) => {
+  //   const newTime = [...time];
+  //   newTimes[index].content = value;
+  //   setTime(value);
+  // };
+  const updateItemTime = (index: number, value: string) => {
+    const newItems = [...items];
+    newItems[index].time = value; // ⭕️ 安全にその行の時間帯だけを上書き
     setItems(newItems);
   };
 
@@ -61,6 +73,7 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
         plan_items_attributes: items.map((item) => ({
           id: item.id,
           content: item.content,
+          time: item.time,
           _destroy: item._destroy,
         })),
       };
@@ -129,6 +142,10 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
     }
   };
 
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTime(e.target.value);
+  };
+
   return (
     <>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -180,12 +197,44 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
                 type="text"
                 value={item.content || ""}
                 onChange={(e) => {
-                  const newItems = [...items];
-                  newItems[index].content = e.target.value;
-                  setItems(newItems);
+                  updateItem(index, e.target.value);
                 }}
                 className="flex-1 border border-gray-300 rounded px-3 py-2 focus:border-blue-500"
               />
+
+              <select
+                value={item.time || "lunch"}
+                onChange={(e) => updateItemTime(index, e.target.value)}
+                className="border border-gray-300 rounded px-2 py-2 bg-gray-50 focus:outline-none focus:border-blue-500 text-sm shrink-0"
+              >
+                <option value="early morning">早朝☀️</option>
+                <option value="morning">🌅 午前</option>
+                <option value="lunch">🍔 昼食</option>
+                <option value="afternoon">🏃 午後</option>
+                <option value="evening">🌆 夕方</option>
+                <option value="night">🌙 夜食</option>
+              </select>
+
+              {/* 
+              {time
+                .filter((time) => !time._destroy)
+                .map((time, index) => (
+                  <div
+                    key={time.id || index}
+                    className="flex gap-2 items-center"
+                  >
+                    <input
+                      type="text"
+                      value={time.content || ""}
+                      onChange={(e) => {
+                        const newTimes = [...time];
+                        newTimes[index].content = e.target.value;
+                        setTime(newTimes);
+                      }}
+                      className="flex-1 border border-gray-300 rounded px-3 py-2 focus:border-blue-500"
+                    />
+                  </div>
+                ))} */}
 
               <div className="flex items-center gap-3">
                 <button

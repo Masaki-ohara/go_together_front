@@ -20,6 +20,7 @@ import GroupDetail from "./features/groups/GroupDetail";
 import Vote from "./features/votes/Vote";
 import Deadline from "./features/votes/Deadline";
 import VoteRanking from "./features/votes/VoteRanking";
+import Schedule from "./features/votes/Schedule";
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
               path="/groups/:groupId/vote/ranking"
               element={<VoteRanking />}
             />
+            <Route path="/groups/:groupId/schedule" element={<Schedule />} />
           </Route>
 
           <Route path="/signup" element={<SignUp />} />

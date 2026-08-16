@@ -208,7 +208,7 @@
 //   );
 // }
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import confetti from "canvas-confetti";
 
 interface PlanVote {
@@ -351,7 +351,7 @@ export default function VoteRanking() {
             return (
               <div
                 key={plan.id}
-                className={`p-4 rounded-xl shadow-sm border flex justify-between items-center transition-all ${
+                className={`mb-5 p-4 rounded-xl shadow-sm border flex justify-between items-center transition-all ${
                   isFirst
                     ? "bg-amber-50 border-amber-300 ring-2 ring-amber-200"
                     : "bg-white border-gray-200"
@@ -391,6 +391,14 @@ export default function VoteRanking() {
           })
         )}
       </div>
+
+      <Link
+        to={`/groups/${groupId}/schedule`}
+        className="inline-block mt-10 bg-yellow-500 text-white px-4 py-2 rounded text-sm font-medium hover:bg-yellow-600 transition-colors shadow text-center"
+        state={{ plan: plans[0] }}
+      >
+        🗓️スケジュール確定
+      </Link>
 
       <button
         onClick={() => navigate(-1)}

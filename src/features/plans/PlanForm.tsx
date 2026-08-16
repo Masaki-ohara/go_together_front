@@ -13,10 +13,15 @@ type FormValues = {
   location: string;
   budget: number;
   list1: string;
+  time1: string;
   list2: string;
+  time2: string;
   list3: string;
+  time3: string;
   list4: string;
+  time4: string;
   list5: string;
+  time5: string;
 };
 
 export default function PlanForm() {
@@ -28,6 +33,7 @@ export default function PlanForm() {
     register,
     handleSubmit,
     control,
+    getValues,
     formState: { errors },
   } = useForm<FormValues>();
 
@@ -49,7 +55,13 @@ export default function PlanForm() {
         date: data.date,
         location: data.location,
         budget: data.budget,
-        lists: [data.list1, data.list2, data.list3, data.list4, data.list5],
+        lists: [
+          { content: data.list1, time: data.time1 },
+          { content: data.list2, time: data.time2 },
+          { content: data.list3, time: data.time3 },
+          { content: data.list4, time: data.time4 },
+          { content: data.list5, time: data.time5 },
+        ].filter((item) => item.content !== ""),
       };
 
       const response = await fetch(
@@ -82,6 +94,31 @@ export default function PlanForm() {
   };
 
   const today = new Date().toLocaleDateString("sv-SE");
+  const TimeSelect = ({
+    name,
+    isRequired = false,
+    validate,
+  }: {
+    name: "time1" | "time2" | "time3" | "time4" | "time5";
+    isRequired?: boolean;
+    validate?: (value: string) => boolean | string;
+  }) => (
+    <select
+      {...register(name, {
+        required: isRequired ? "時間帯を選択してください" : false,
+        validate: validate,
+      })}
+      className="bg-gray-300 appearance-none border-2 border-gray-400 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 transition duration-200 mt-2"
+    >
+      <option value="">時間帯を選択してください</option>
+      <option value="early morning">早朝☀️</option>
+      <option value="morning">🌅 午前</option>
+      <option value="lunch">🍔 昼食・お昼</option>
+      <option value="afternoon">🏃 午後</option>
+      <option value="evening">🌆 夕方</option>
+      <option value="night">🌙 夜・夕食</option>
+    </select>
+  );
 
   return (
     <div className="max-w-lg mx-auto space-y-6">
@@ -213,8 +250,12 @@ export default function PlanForm() {
             })}
             className="bg-gray-300 appearance-none border-2 border-gray-400 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 transition duration-200"
           />
+          <TimeSelect name="time1" isRequired={true} />
           {errors.list1 && (
             <p className="text-red-500 text-sm">{errors.list1.message}</p>
+          )}
+          {errors.time1 && (
+            <p className="text-red-500 text-sm">{errors.time1.message}</p>
           )}
         </div>
 
@@ -229,10 +270,28 @@ export default function PlanForm() {
             type="text"
             placeholder="したいことを入力してください"
             {...register("list2", {
+              // ⬇️ ここから追記
+              validate: (val) =>
+                getValues("time2") && !val
+                  ? "したいことも入力してください"
+                  : true,
+              // ⬆️ ここまで追記
               //   required: "2つ目は必須です",
             })}
             className="bg-gray-300 appearance-none border-2 border-gray-400 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 transition duration-200"
           />
+          <TimeSelect
+            name="time2"
+            validate={(val) =>
+              getValues("list2") && !val ? "時間帯も選択してください" : true
+            }
+          />
+          {errors.list2 && (
+            <p className="text-red-500 text-sm mt-1">{errors.list2.message}</p>
+          )}
+          {errors.time2 && (
+            <p className="text-red-500 text-sm mt-1">{errors.time2.message}</p>
+          )}
           {/* {errors.list2 && (
             <p className="text-red-500 text-sm">
               {errors.list2.message}
@@ -250,15 +309,31 @@ export default function PlanForm() {
             type="text"
             placeholder="したいことを入力してください"
             {...register("list3", {
+              validate: (val) =>
+                getValues("time3") && !val
+                  ? "したいことも入力してください"
+                  : true,
               //   required: "3つ目は必須です",
             })}
             className="bg-gray-200 appearance-none border-2 border-gray-400 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 transition duration-200"
           />
+          {errors.list3 && (
+            <p className="text-red-500 text-sm mt-1">{errors.list3.message}</p>
+          )}
+          {errors.time3 && (
+            <p className="text-red-500 text-sm mt-1">{errors.time3.message}</p>
+          )}
           {/* {errors.list3 && (
             <p className="text-red-500 text-sm">
               {errors.list3.message}
             </p>
           )} */}
+          <TimeSelect
+            name="time3"
+            validate={(val) =>
+              getValues("list3") && !val ? "時間帯も選択してください" : true
+            }
+          />
         </div>
 
         <div>
@@ -271,15 +346,31 @@ export default function PlanForm() {
             type="text"
             placeholder="したいことを入力してください"
             {...register("list4", {
+              validate: (val) =>
+                getValues("time4") && !val
+                  ? "したいことも入力してください"
+                  : true,
               //   required: "3つ目は必須です",
             })}
             className="bg-gray-200 appearance-none border-2 border-gray-400 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 transition duration-200"
           />
+          {errors.list4 && (
+            <p className="text-red-500 text-sm mt-1">{errors.list4.message}</p>
+          )}
+          {errors.time4 && (
+            <p className="text-red-500 text-sm mt-1">{errors.time4.message}</p>
+          )}
           {/* {errors.list3 && (
             <p className="text-red-500 text-sm">
               {errors.list3.message}
             </p>
           )} */}
+          <TimeSelect
+            name="time4"
+            validate={(val) =>
+              getValues("list4") && !val ? "時間帯も選択してください" : true
+            }
+          />
         </div>
 
         <div>
@@ -292,15 +383,31 @@ export default function PlanForm() {
             type="text"
             placeholder="したいことを入力してください"
             {...register("list5", {
+              validate: (val) =>
+                getValues("time5") && !val
+                  ? "したいことも入力してください"
+                  : true,
               //   required: "3つ目は必須です",
             })}
             className="bg-gray-200 appearance-none border-2 border-gray-400 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 transition duration-200"
           />
+          {errors.list5 && (
+            <p className="text-red-500 text-sm mt-1">{errors.list5.message}</p>
+          )}
+          {errors.time5 && (
+            <p className="text-red-500 text-sm mt-1">{errors.time5.message}</p>
+          )}
           {/* {errors.list3 && (
             <p className="text-red-500 text-sm">
               {errors.list3.message}
             </p>
           )} */}
+          <TimeSelect
+            name="time5"
+            validate={(val) =>
+              getValues("list5") && !val ? "時間帯も選択してください" : true
+            }
+          />
         </div>
 
         <button
