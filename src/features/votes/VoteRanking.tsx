@@ -1,16 +1,5 @@
-// // // import React from 'react'
-
-// // // export default function VoteRanking() {
-// // //   return (
-// // //     <div>
-// // //       <h1 className='text-2xl font-bold mb-4'>投票結果</h1>
-// // //       <p>1ちいちい</p>
-// // //     </div>
-// // //   )
-// // // }
-
 // import React, { useEffect, useState } from "react";
-// import { useParams, useNavigate } from "react-router-dom";
+// import { useParams, useNavigate, Link } from "react-router-dom";
 // import confetti from "canvas-confetti";
 
 // interface PlanVote {
@@ -27,6 +16,10 @@
 //   const [loading, setLoading] = useState(true);
 //   const todayStr = new Date().toLocaleDateString("sv-SE");
 //   const [groupDeadline, setGroupDeadline] = useState<string>("");
+//   // 💡 締め切り判定
+//   const isBeforeDeadline = groupDeadline
+//     ? groupDeadline.substring(0, 10) > todayStr
+//     : false;
 
 //   useEffect(() => {
 //     if (!groupId) return;
@@ -49,7 +42,7 @@
 //           setGroupName(data.name || "");
 //           setGroupDeadline(data.deadline || "");
 
-//           // 💡 届いたデータを最初から「投票数が多い順（降順）」に並び替えてStateに入れる
+//           // 届いたデータを最初から「投票数が多い順（降順）」に並び替えてStateに入れる
 //           const sortedPlans = (data.plans || [])
 //             .map((p: any) => ({
 //               id: p.id,
@@ -59,14 +52,6 @@
 //             .sort((a: any, b: any) => b.vote_count - a.vote_count);
 
 //           setPlans(sortedPlans);
-//           // 🎉 【追加：ド派手エフェクトの自動発火】
-//           // 締め切りを過ぎていて、かつ投票データがある場合に紙吹雪をドカンと鳴らす！
-//           const isExpired = data.deadline
-//             ? data.deadline.substring(0, 10) <= todayStr
-//             : false;
-//           if (isExpired && sortedPlans.length > 0) {
-//             triggerLuxuryConfetti();
-//           }
 //         }
 //       } catch (error) {
 //         console.error("結果の取得に失敗しました", error);
@@ -77,6 +62,18 @@
 
 //     fetchResults();
 //   }, [groupId]);
+
+//   // 💡 【新設】紙吹雪を100%確実に自動発火させる専用のトリガー
+//   useEffect(() => {
+//     // 読み込みが終わり、締め切りを過ぎていて、かつプラン（ランキング）が存在するときに発火
+//     if (!loading && !isBeforeDeadline && plans.length > 0) {
+//       // 画面の描画が一瞬遅れても大丈夫なように、100ミリ秒だけ待ってから確実に打ち上げる
+//       const timer = setTimeout(() => {
+//         triggerLuxuryConfetti();
+//       }, 100);
+//       return () => clearTimeout(timer);
+//     }
+//   }, [loading, isBeforeDeadline, plans]);
 
 //   // 🎆 左右から時間差で200発の紙吹雪を中央に打ち上げる演出関数
 //   const triggerLuxuryConfetti = () => {
@@ -100,10 +97,6 @@
 //     }, 150);
 //   };
 
-//   const isBeforeDeadline = groupDeadline
-//     ? groupDeadline.substring(0, 10) > todayStr
-//     : false;
-
 //   if (loading) return <div className="p-6 text-gray-500">結果を集計中...</div>;
 
 //   return (
@@ -124,14 +117,6 @@
 //       </p>
 
 //       <div className="space-y-4">
-//         {/* {isBeforeDeadline  ? (
-//           <h1 className="p-3 bg-yellow-50 text-yellow-700 rounded-lg font-medium border border-yellow-200 text-center">
-//             ⚠️ まだ投票締め切り前です
-//           </h1>
-//         ) : null}
-//         {plans.length === 0 ? (
-//           <p className="text-gray-500 text-center">投票データがありません</p>
-//         ) : ( */}
 //         {isBeforeDeadline ? (
 //           // パターンA: 締め切り前の時はこのメッセージだけを出す（リストは隠す）
 //           <div className="p-6 bg-yellow-50 text-yellow-700 rounded-xl font-medium border border-yellow-200 text-center shadow-sm">
@@ -145,7 +130,6 @@
 //           <p className="text-gray-500 text-center">投票データがありません</p>
 //         ) : (
 //           plans.map((plan, index) => {
-//             // 💡 1位、2位、3位、それ以外でデザインや絵文字を変える
 //             const isFirst = index === 0 && plan.vote_count > 0;
 //             const getRankBadge = (rank: number) => {
 //               if (rank === 0 && plan.vote_count > 0) return "🥇 1位";
@@ -157,7 +141,7 @@
 //             return (
 //               <div
 //                 key={plan.id}
-//                 className={`p-4 rounded-xl shadow-sm border flex justify-between items-center transition-all ${
+//                 className={`mb-5 p-4 rounded-xl shadow-sm border flex justify-between items-center transition-all ${
 //                   isFirst
 //                     ? "bg-amber-50 border-amber-300 ring-2 ring-amber-200"
 //                     : "bg-white border-gray-200"
@@ -198,6 +182,14 @@
 //         )}
 //       </div>
 
+//       <Link
+//         to={`/groups/${groupId}/schedule`}
+//         className="inline-block mt-10 bg-yellow-500 text-white px-4 py-2 rounded text-sm font-medium hover:bg-yellow-600 transition-colors shadow text-center"
+//         state={{ plan: plans[0] }}
+//       >
+//         🗓️スケジュール確定
+//       </Link>
+
 //       <button
 //         onClick={() => navigate(-1)}
 //         className="mt-6 w-full bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors shadow-sm font-medium"
@@ -208,7 +200,7 @@
 //   );
 // }
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import confetti from "canvas-confetti";
 
 interface PlanVote {
@@ -225,6 +217,9 @@ export default function VoteRanking() {
   const [loading, setLoading] = useState(true);
   const todayStr = new Date().toLocaleDateString("sv-SE");
   const [groupDeadline, setGroupDeadline] = useState<string>("");
+
+  // 💡 APIからの作成者判定フラグを保持するState
+  const [isOwner, setIsOwner] = useState(false);
 
   // 💡 締め切り判定
   const isBeforeDeadline = groupDeadline
@@ -252,7 +247,9 @@ export default function VoteRanking() {
           setGroupName(data.name || "");
           setGroupDeadline(data.deadline || "");
 
-          // 届いたデータを最初から「投票数が多い順（降順）」に並び替えてStateに入れる
+          // 💡 Rails側で判定された is_owner フラグを取得
+          setIsOwner(Boolean(data.is_owner));
+
           const sortedPlans = (data.plans || [])
             .map((p: any) => ({
               id: p.id,
@@ -273,11 +270,8 @@ export default function VoteRanking() {
     fetchResults();
   }, [groupId]);
 
-  // 💡 【新設】紙吹雪を100%確実に自動発火させる専用のトリガー
   useEffect(() => {
-    // 読み込みが終わり、締め切りを過ぎていて、かつプラン（ランキング）が存在するときに発火
     if (!loading && !isBeforeDeadline && plans.length > 0) {
-      // 画面の描画が一瞬遅れても大丈夫なように、100ミリ秒だけ待ってから確実に打ち上げる
       const timer = setTimeout(() => {
         triggerLuxuryConfetti();
       }, 100);
@@ -285,9 +279,7 @@ export default function VoteRanking() {
     }
   }, [loading, isBeforeDeadline, plans]);
 
-  // 🎆 左右から時間差で200発の紙吹雪を中央に打ち上げる演出関数
   const triggerLuxuryConfetti = () => {
-    // 左側からのキャノン
     confetti({
       particleCount: 100,
       angle: 60,
@@ -295,16 +287,6 @@ export default function VoteRanking() {
       origin: { x: 0, y: 0.8 },
       colors: ["#FFD700", "#FFA500", "#FF4500", "#DF0024", "#00A86B"],
     });
-    // 右側からのキャノン（少しだけ遅らせる）
-    setTimeout(() => {
-      confetti({
-        particleCount: 100,
-        angle: 120,
-        spread: 70,
-        origin: { x: 1, y: 0.8 },
-        colors: ["#FFD700", "#FFA500", "#FF4500", "#007FFF", "#8A2BE2"],
-      });
-    }, 150);
   };
 
   if (loading) return <div className="p-6 text-gray-500">結果を集計中...</div>;
@@ -328,7 +310,6 @@ export default function VoteRanking() {
 
       <div className="space-y-4">
         {isBeforeDeadline ? (
-          // パターンA: 締め切り前の時はこのメッセージだけを出す（リストは隠す）
           <div className="p-6 bg-yellow-50 text-yellow-700 rounded-xl font-medium border border-yellow-200 text-center shadow-sm">
             <p className="text-lg font-bold mb-2">⚠️ まだ投票締め切り前です</p>
             <p className="text-sm text-yellow-600">
@@ -336,7 +317,6 @@ export default function VoteRanking() {
             </p>
           </div>
         ) : plans.length === 0 ? (
-          // パターンB: 締め切りを過ぎているが、投票がない時
           <p className="text-gray-500 text-center">投票データがありません</p>
         ) : (
           plans.map((plan, index) => {
@@ -351,7 +331,7 @@ export default function VoteRanking() {
             return (
               <div
                 key={plan.id}
-                className={`p-4 rounded-xl shadow-sm border flex justify-between items-center transition-all ${
+                className={`mb-5 p-4 rounded-xl shadow-sm border flex justify-between items-center transition-all ${
                   isFirst
                     ? "bg-amber-50 border-amber-300 ring-2 ring-amber-200"
                     : "bg-white border-gray-200"
@@ -391,6 +371,17 @@ export default function VoteRanking() {
           })
         )}
       </div>
+
+      {/* 💡 締め切り後 ＆ 投票データあり ＆ グループ作成者（isOwner）の場合のみ表示 */}
+      {!isBeforeDeadline && plans.length > 0 && isOwner && (
+        <Link
+          to={`/groups/${groupId}/schedule`}
+          className="inline-block mt-10 w-full bg-yellow-500 text-white px-4 py-3 rounded-xl font-bold hover:bg-yellow-600 transition-colors shadow-md text-center"
+          state={{ plan: plans[0] }}
+        >
+          🗓️ スケジュール確定
+        </Link>
+      )}
 
       <button
         onClick={() => navigate(-1)}
