@@ -22,6 +22,7 @@ export default function Schedule() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const { groupId } = useParams<{ groupId: string }>();
+
   useEffect(() => {
     if (!plan?.id) {
       setLoading(false);
