@@ -95,6 +95,9 @@ export default function Schedule() {
             schedule: {
               title: plan?.title || "確定スケジュール",
               date: plan?.date,
+              plan_id: plan?.id,
+              // location: plan?.location,
+              // budget: plan?.budget,
               schedule_items_attributes: items.map((item) => ({
                 start_time: item.start_time || "",
                 end_time: item.end_time || "",
