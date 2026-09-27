@@ -105,6 +105,15 @@ export default function GroupDetail() {
           📝 プラン一覧
         </Link>
       </div>
+
+      <div className="mt-6">
+        <Link
+          to={`/groups/${group.id}/schedules`}
+          className="block p-2 hover:bg-gray-700 rounded transition"
+        >
+          🕒 しおり
+        </Link>
+      </div>
     </div>
   );
 }
