@@ -6,8 +6,15 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
   const [title, setTitle] = useState(plan.title);
   const [location, setLocation] = useState(plan.location);
   const [budget, setBudget] = useState(plan.budget);
-  const [items, setItems] = useState(plan.plan_items || []);
+  // const [items, setItems] = useState(plan.plan_items || []);
   const [time, setTime] = useState(plan.time || "");
+
+  const [items, setItems] = useState(
+    (plan.plan_items || []).map((item: any) => ({
+      ...item,
+      time: item.category || item.time || "lunch",
+    })),
+  );
 
   const addItem = () => {
     if (items.length >= 5) {
@@ -19,6 +26,8 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
 
   const updateItem = (index: number, value: string) => {
     const newItems = [...items];
+    newItems[index].time = value;
+    newItems[index].category = value;
     newItems[index].content = value;
     setItems(newItems);
   };
@@ -74,6 +83,7 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
           id: item.id,
           content: item.content,
           time: item.time,
+          category: item.category || item.time,
           _destroy: item._destroy,
         })),
       };

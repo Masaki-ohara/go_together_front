@@ -356,11 +356,19 @@ export default function PlanDetail() {
   const parsedItems = plan.plan_items
     ? plan.plan_items.map((item: any) => ({
         ...item,
-        // Railsの新しいtimeカラムとcontentカラムの値をそのまま使うだけ！
+        // Railsの content を使用
         parsedContent: item.content,
-        parsedTime: item.time,
+        // 🔽 item.time が無ければ DB の category カラムを参照する
+        parsedTime: item.time || item.category,
       }))
     : [];
+  // ? plan.plan_items.map((item: any) => ({
+  //     ...item,
+  //     // Railsの新しいtimeカラムとcontentカラムの値をそのまま使うだけ！
+  //     parsedContent: item.content,
+  //     parsedTime: item.time,
+  //   }))
+  // : [];
 
   // ⭕️ 当日のスケジュール用に時系列順にソートする処理
   const timelineItems = [...parsedItems].sort((a, b) => {
