@@ -615,6 +615,16 @@ export default function PlanList() {
           </button>
         </div>
 
+        <div className="mt-6 text-center">
+          <button
+            type="button"
+            onClick={() => navigate(`/groups/${groupId}/ai_plans/new`)}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors shadow"
+          >
+            ＋ AIプラン作成
+          </button>
+        </div>
+
         <div className="flex flex-col gap-2 mt-4">
           <Link
             to={`/groups/${groupId}/deadline`}

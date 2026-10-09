@@ -22,6 +22,7 @@ import Deadline from "./features/votes/Deadline";
 import VoteRanking from "./features/votes/VoteRanking";
 import Schedule from "./features/votes/Schedule";
 import ScheduleBoard from "./features/schedule/ScheduleBoard";
+import AiPlanForm from "./features/plans/AiPlanForm";
 
 function App() {
   return (
@@ -38,6 +39,10 @@ function App() {
             <Route path="/groups" element={<GroupList />} />
             <Route path="/groups/:groupId/plans" element={<PlanList />} />
             <Route path="/groups/:groupId/plans/new" element={<PlanForm />} />
+            <Route
+              path="/groups/:groupId/ai_plans/new"
+              element={<AiPlanForm />}
+            />
             <Route
               path="/groups/:groupId/plans/:planId/edit"
               element={<PlanEditForm />}
