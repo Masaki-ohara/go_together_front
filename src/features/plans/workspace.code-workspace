@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "../../../.."
+		},
+		{
+			"path": "../../../../../../Downloads/spring-basic-src-master"
+		}
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true,
+		"liveServer.settings.port": 5501,
+		"java.configuration.updateBuildConfiguration": "automatic",
+		"java.project.sourcePaths": [
+			"go_together_front/src/features/groups"
+		]
+	}
+}

@@ -265,7 +265,8 @@ type ScheduleData = {
 };
 
 export default function ScheduleBoard() {
-  const { groupId } = useParams<{ groupId: string }>();
+  // const { groupId } = useParams<{ groupId: string }>();
+  const { groupId, id } = useParams<{ groupId: string; id: string }>();
   const [schedule, setSchedule] = useState<ScheduleData | null>(null);
 
   useEffect(() => {
@@ -274,7 +275,8 @@ export default function ScheduleBoard() {
     const fetchSchedule = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/v1/groups/${groupId}/schedules`,
+          // `http://localhost:3000/api/v1/groups/${groupId}/schedules`,
+          `http://localhost:3000/api/v1/groups/${groupId}/schedules/${id}`,
           {
             headers: {
               "access-token": localStorage.getItem("access-token") || "",

@@ -24,12 +24,41 @@ export default function Schedule() {
   const { groupId } = useParams<{ groupId: string }>();
 
   useEffect(() => {
-    if (!plan?.id) {
+    // 💡 投票結果画面から state で渡された plan のみを厳格に使う
+    const currentPlan = location.state?.plan;
+
+    if (!currentPlan?.id) {
+      console.error(
+        "プランIDが見つかりません。投票結果画面から正しく遷移してください。",
+        location.state,
+      );
       setLoading(false);
       return;
     }
 
-    fetch(`http://localhost:3000/api/v1/plans/${plan.id}`, {
+    // 選択されたプランIDの詳細を確実にフェッチする
+    fetch(`http://localhost:3000/api/v1/plans/${currentPlan.id}`, {
+      headers: {
+        "access-token": localStorage.getItem("access-token") || "",
+        client: localStorage.getItem("client") || "",
+        uid: localStorage.getItem("uid") || "",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setPlan(data);
+        const planItems = data.plan_items || [];
+        setItems(sortItemsByTime(planItems));
+      })
+      .catch((err) => {
+        console.error("プラン詳細の取得に失敗しました", err);
+      })
+      .finally(() => setLoading(false));
+  }, [location.state]);
+
+  // プラン詳細をフェッチする共通関数
+  const fetchPlanDetail = (planId: number | string) => {
+    fetch(`http://localhost:3000/api/v1/plans/${planId}`, {
       headers: {
         "access-token": localStorage.getItem("access-token") || "",
         client: localStorage.getItem("client") || "",
@@ -44,7 +73,7 @@ export default function Schedule() {
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
-  }, []);
+  };
 
   // 開始時間で昇順ソート
   const sortItemsByTime = (itemList: any[]) => {
@@ -123,42 +152,6 @@ export default function Schedule() {
       setSaving(false);
     }
   };
-  // const handleSave = async () => {
-  //   setSaving(true);
-  //   try {
-  //     const response = await fetch(
-  //       `http://localhost:3000/api/v1/groups/${groupId}/schedules`,
-  //       {
-  //         method: "PATCH",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           "access-token": localStorage.getItem("access-token") || "",
-  //           client: localStorage.getItem("client") || "",
-  //           uid: localStorage.getItem("uid") || "",
-  //         },
-  //         body: JSON.stringify({
-  //           plan: {
-  //             plan_items_attributes: items.map((item) => ({
-  //               id: item.id,
-  //               start_time: item.start_time || item.time,
-  //               end_time: item.end_time,
-  //               content: item.content,
-  //             })),
-  //           },
-  //         }),
-  //       },
-  //     );
-
-  //     if (!response.ok) throw new Error("保存に失敗しました");
-  //     toast.success("スケジュールを保存しました ✨");
-  //     navigate(`/groups/${groupId}/plans`);
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast.error("保存に失敗しました");
-  //   } finally {
-  //     setSaving(false);
-  //   }
-  // };
 
   if (loading) {
     return (

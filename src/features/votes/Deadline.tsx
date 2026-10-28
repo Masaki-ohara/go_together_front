@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BackButton from "../../components/common/BackButton";
 
@@ -6,6 +6,28 @@ export default function Deadline() {
   const { groupId } = useParams<{ groupId: string }>(); // 💡 URLから :groupId を取得
   const navigate = useNavigate();
   const [deadline, setDeadline] = React.useState("");
+
+  const clickBack = () => navigate(`/groups/${groupId}/plans`);
+
+  useEffect(() => {
+    if (!groupId) return;
+
+    fetch(`http://localhost:3000/api/v1/groups/${groupId}`, {
+      headers: {
+        "access-token": localStorage.getItem("access-token") || "",
+        client: localStorage.getItem("client") || "",
+        uid: localStorage.getItem("uid") || "",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.deadline) {
+          // "2026-07-27T00:00:00.000Z" のような形式から "YYYY-MM-DD" だけを抽出する
+          setDeadline(data.deadline.substring(0, 10));
+        }
+      })
+      .catch((err) => console.error("グループ情報の取得に失敗しました", err));
+  }, [groupId]);
 
   // 決定ボタンを押したときの処理（ここから関数がスタート）
   const handleSetDeadline = async () => {
@@ -61,7 +83,7 @@ export default function Deadline() {
         type="date"
         value={deadline}
         onChange={(e) => setDeadline(e.target.value)}
-        min={today} // 日本時間で正しく今日以降を制限
+        min={today}
         className="w-64 border border-gray-300 rounded px-3 py-2 mb-4 cursor-pointer"
       />
       <button
@@ -70,7 +92,12 @@ export default function Deadline() {
       >
         期限を設定
       </button>
-      <BackButton />
+      <button
+        onClick={clickBack}
+        className="mt-6 bg-gray-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+      >
+        プラン候補一覧画面へ
+      </button>
     </div>
   );
 }

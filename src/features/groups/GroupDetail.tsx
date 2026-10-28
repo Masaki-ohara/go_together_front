@@ -27,6 +27,7 @@ export default function GroupDetail() {
           },
         );
         const data = await response.json();
+        console.log("取得したグループデータ:", data); // 👈 ここを追加！
         setGroup(data);
       } catch (error) {
         console.error("データの取得に失敗しました", error);
@@ -40,7 +41,12 @@ export default function GroupDetail() {
     return <div className="p-6 text-gray-500">読み込み中...</div>;
   }
 
+  const schedulesCount = group.schedules?.length ?? group.schedules_count ?? 0;
+  const currentRound = schedulesCount + 1; // 現在の回数を計算
   const shareLink = `${window.location.origin}/groups/join?token=${group.share_token}`;
+
+  // ⭕️ 確定済みスケジュール数から現在の「第◯回」を計算（APIにschedulesが含まれる場合）
+  // const currentRound = (group.schedules?.length || 0) + 1;
 
   return (
     <div className="p-6">
@@ -97,6 +103,7 @@ export default function GroupDetail() {
         </div>
       )}
 
+      {/* 
       <div className="mt-6">
         <Link
           to={`/groups/${group.id}/plans`}
@@ -112,6 +119,25 @@ export default function GroupDetail() {
           className="block p-2 hover:bg-gray-700 rounded transition"
         >
           🕒 しおり
+        </Link>
+      </div>
+    </div> */}
+      {/* ナビゲーションリンクエリア */}
+      <div className="mt-8 space-y-3">
+        {/* ⭕️ プラン候補一覧ボタン（現在検討中の回数を表示） */}
+        <Link
+          to={`/groups/${group.id}/plans`}
+          className="block p-4 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl transition text-center shadow-md"
+        >
+          📝 第{currentRound}回 プラン候補一覧（投票・作成）
+        </Link>
+
+        {/* ⭕️ 確定済みしおり（スケジュール一覧）ボタン */}
+        <Link
+          to={`/groups/${group.id}/schedules`}
+          className="block p-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition text-center border border-gray-300"
+        >
+          🕒 確定したしおり一覧を見る
         </Link>
       </div>
     </div>
