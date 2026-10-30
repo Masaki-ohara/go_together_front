@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import BackButton from "../../components/common/BackButton";
 import { Link } from "react-router-dom";
 
-// 1. APIのレスポンス構造に合わせた型定義
 type Plan = {
   id: number;
   location?: string;
@@ -99,7 +98,6 @@ export default function ScheduleBoard() {
               </div>
             )}
 
-          {/* 日付の表示 */}
           {schedule.date && (
             <div className="flex items-center font-medium text-gray-700">
               🗓️{" "}
@@ -111,7 +109,6 @@ export default function ScheduleBoard() {
         </div>
       </div>
 
-      {/* 2. したいことリスト（タイムライン形式） */}
       <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100">
         <h2 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">
           ✨ タイムライン / したいこと
@@ -119,7 +116,7 @@ export default function ScheduleBoard() {
 
         <Link
           to={`/groups/${groupId}/schedules/${id}/tasks`}
-          className="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg font-medium transition-colors"
+          className="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg font-medium transition-colors inline-block mb-6"
         >
           📋 役割・タスク一覧
         </Link>
