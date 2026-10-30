@@ -24,6 +24,8 @@ import Schedule from "./features/votes/Schedule";
 import ScheduleBoard from "./features/schedule/ScheduleBoard";
 import AiPlanForm from "./features/plans/AiPlanForm";
 import ScheduleList from "./features/schedule/SchduleList";
+import TaskCreate from "./features/tasks/TaskCreate";
+import TaskList from "./features/tasks/TaskList";
 
 function App() {
   return (
@@ -76,6 +78,14 @@ function App() {
             <Route
               path="/groups/:groupId/schedules/:id"
               element={<ScheduleBoard />}
+            />
+            <Route
+              path="/groups/:groupId/schedules/:scheduleId/tasks/create"
+              element={<TaskCreate />}
+            />
+            <Route
+              path="/groups/:groupId/schedules/:scheduleId/tasks"
+              element={<TaskList />}
             />
           </Route>
 
