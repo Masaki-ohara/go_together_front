@@ -155,36 +155,6 @@ export default function Vote() {
         setLoading(false);
       }
     };
-    // const data = await response.json();
-
-    // // ⏰ 締め切り日が設定されていない（null または 空文字）場合のガード
-    // if (!data.deadline) {
-    //   alert(
-    //     "投票締め切り日が設定されていません。先に締め切りを設定してください。",
-    //   );
-    //   navigate(`/groups/${groupId}/deadline`);
-    //   return;
-    // }
-
-    // if (response.ok) {
-    //   const data = await response.json();
-    //   const formattedPlans = (data.plans || []).map((p: any) => ({
-    //     id: p.id,
-    //     title: p.title || p.name || p.location || "名称未設定のプラン",
-    //     vote_count: p.vote_count || 0,
-    //     voted_by_current_user: p.voted_by_current_user || false,
-    //   }));
-
-    // グループ情報も同時にセットして期限切れ判定を動かす
-    //   setGroup({
-    //     id: data.id,
-    //     name: data.name,
-    //     deadline: data.deadline,
-    //   });
-
-    //   setPlans(formattedPlans);
-    // }
-
     fetchVotePlans();
   }, [groupId]);
 
