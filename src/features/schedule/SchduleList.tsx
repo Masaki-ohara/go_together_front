@@ -4,7 +4,7 @@ import { saveAuthHeaders } from "../../utils/auth";
 
 interface ScheduleItem {
   id: number;
-  date?: string; // 予定日（バックエンドの構造に合わせて調整してください）
+  date?: string;
   title?: string;
 }
 
@@ -15,7 +15,6 @@ interface Schedule {
     title: string;
   };
   created_at: string;
-  // もし schedule 自体に日付やデータがある場合はここに追加
 }
 
 export default function ScheduleList() {
@@ -54,13 +53,21 @@ export default function ScheduleList() {
       saveAuthHeaders(res);
       const data = await res.json();
 
+      let targetSchedules: Schedule[] = [];
+
       if (Array.isArray(data)) {
-        setSchedules(data);
+        targetSchedules = data;
       } else if (data && Array.isArray(data.schedules)) {
-        setSchedules(data.schedules);
-      } else {
-        setSchedules([]);
+        targetSchedules = data.schedules;
       }
+
+      // ⭕️ created_at の古い順（昇順）にソートして、第1回、第2回...が正しく並ぶように設定
+      const sortedSchedules = [...targetSchedules].sort(
+        (a, b) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+      );
+
+      setSchedules(sortedSchedules);
     } catch (err) {
       console.error(err);
       setError("通信エラーが発生しました");
@@ -98,7 +105,7 @@ export default function ScheduleList() {
           </div>
         ) : (
           schedules.map((schedule, index) => {
-            // 第何回目かを計算（古い順、あるいは配列のインデックス等から逆算）
+            // 古い順に並び替えているため、index + 1 がそのまま正しく第1回、第2回...になります
             const roundNum = index + 1;
             const planTitle = schedule.plan?.title || "名称未設定のプラン";
             const confirmedDate = schedule.created_at
