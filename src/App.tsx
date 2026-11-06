@@ -27,6 +27,7 @@ import ScheduleList from "./features/schedule/SchduleList";
 import TaskCreate from "./features/tasks/TaskCreate";
 import TaskList from "./features/tasks/TaskList";
 import VoteRandom from "./features/votes/VoteRamdom";
+import TaskEdit from "./features/tasks/TaskEdit";
 
 function App() {
   return (
@@ -91,6 +92,10 @@ function App() {
             <Route
               path="/groups/:groupId/vote/random"
               element={<VoteRandom />}
+            />
+            <Route
+              path="/groups/:groupId/schedules/:scheduleId/tasks/:taskId/edit"
+              element={<TaskEdit />}
             />
           </Route>
 
