@@ -215,7 +215,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
-// Taskの型定義
 interface Task {
   id: number;
   role: string;
@@ -233,6 +232,7 @@ export default function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [error, setError] = useState<string>("");
 
+  // 完了/未完了の切り替え
   const handleToggleComplete = async (taskId: number, completed: boolean) => {
     if (!groupId || !scheduleId) {
       setError("グループIDまたはスケジュールIDが無効です");
@@ -259,8 +259,37 @@ export default function TaskList() {
         return;
       }
 
-      // 成功した場合、タスク一覧を再取得
       fetchTasks();
+    } catch (err) {
+      console.error(err);
+      setError("通信エラーが発生しました");
+    }
+  };
+
+  // 削除処理
+  const handleDelete = async (taskId: number) => {
+    if (!window.confirm("このタスクを本当に削除しますか？")) return;
+    if (!groupId || !scheduleId) return;
+
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/v1/groups/${groupId}/schedules/${scheduleId}/tasks/${taskId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "access-token": localStorage.getItem("access-token") || "",
+            client: localStorage.getItem("client") || "",
+            uid: localStorage.getItem("uid") || "",
+          },
+        },
+      );
+
+      if (!res.ok) {
+        setError("タスクの削除に失敗しました");
+        return;
+      }
+
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
     } catch (err) {
       console.error(err);
       setError("通信エラーが発生しました");
@@ -308,7 +337,6 @@ export default function TaskList() {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      {/* ヘッダー部分 */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">役割・タスク一覧</h1>
         {groupId && scheduleId && (
@@ -321,14 +349,12 @@ export default function TaskList() {
         )}
       </div>
 
-      {/* エラー表示 */}
       {error && (
         <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">
           {error}
         </div>
       )}
 
-      {/* タスク一覧 */}
       {tasks.length === 0 && !error ? (
         <div className="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300">
           <p className="text-gray-500 mb-2">まだタスクが登録されていません</p>
@@ -349,7 +375,6 @@ export default function TaskList() {
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-3">
-                  {/* チェックボックス */}
                   <input
                     type="checkbox"
                     checked={task.completed}
@@ -359,7 +384,6 @@ export default function TaskList() {
                     className="mt-1 w-5 h-5 text-blue-600 rounded focus:ring-blue-500 cursor-pointer"
                   />
                   <div>
-                    {/* 役割（タイトル） */}
                     <h3
                       className={`text-lg font-semibold mb-1 flex items-center gap-2 ${
                         task.completed
@@ -375,15 +399,28 @@ export default function TaskList() {
                       )}
                     </h3>
 
-                    {/* 説明文 */}
                     <p className="text-gray-600 text-sm mb-3 whitespace-pre-wrap">
                       {task.description || "説明はありません"}
                     </p>
                   </div>
                 </div>
+
+                <div className="flex items-center gap-2 ml-4">
+                  <Link
+                    to={`/groups/${groupId}/schedules/${scheduleId}/tasks/${task.id}/edit`}
+                    className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-md font-medium transition-colors"
+                  >
+                    編集
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(task.id)}
+                    className="text-xs bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-md font-medium transition-colors"
+                  >
+                    削除
+                  </button>
+                </div>
               </div>
 
-              {/* フッター情報（担当者など） */}
               <div className="flex items-center justify-between pt-3 border-t border-gray-100 text-xs text-gray-500">
                 <div className="flex items-center gap-1.5">
                   <span className="font-medium text-gray-700">担当者:</span>

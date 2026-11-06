@@ -82,7 +82,7 @@
 // }
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-
+import { toast } from "react-toastify";
 // ユーザーの型定義
 interface User {
   id: number;
@@ -160,7 +160,7 @@ export default function TaskCreate() {
       if (!response.ok) {
         throw new Error("タスクの作成に失敗しました");
       }
-
+      toast.success("タスクが正常に作成されました👤");
       navigate(`/groups/${groupId}/schedules/${scheduleId}/tasks`);
     } catch (error) {
       console.error(error);
