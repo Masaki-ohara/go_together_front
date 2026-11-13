@@ -33,7 +33,7 @@ export default function Sidebar() {
   return (
     // return <aside className="w-64 bg-gray-200 p-4">Sidebar</aside>;
     <aside className="w-64 bg-gray-800 text-white h-screen p-4">
-      <h2 className="text-xl font-bold mb-6">サイドバー</h2>
+      {/* <h2 className="text-xl font-bold mb-6">サイドバー</h2> */}
 
       <nav>
         <p className="text-gray-400 text-xs uppercase mb-2">所属グループ</p>

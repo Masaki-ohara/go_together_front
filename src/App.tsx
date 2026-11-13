@@ -28,6 +28,7 @@ import TaskCreate from "./features/tasks/TaskCreate";
 import TaskList from "./features/tasks/TaskList";
 import VoteRandom from "./features/votes/VoteRamdom";
 import TaskEdit from "./features/tasks/TaskEdit";
+import Mypage from "./pages/Mypage";
 
 function App() {
   return (
@@ -101,6 +102,7 @@ function App() {
 
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/mypage" element={<Mypage />} />
         </Routes>
       </Router>
     </>
