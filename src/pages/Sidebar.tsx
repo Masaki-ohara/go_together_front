@@ -1,42 +1,59 @@
-import React from "react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import API_BASE_URL from "../config/api";
+
+type Group = {
+  id: number;
+  name: string;
+  users?: unknown[];
+};
 
 export default function Sidebar() {
-  const [groups, setGroups] = useState<any[]>([]);
+  const [groups, setGroups] = useState<Group[]>([]);
   const location = useLocation();
 
   useEffect(() => {
     // ログインしている場合のみ取得
     const fetchGroups = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/v1/groups", {
+        const accessToken = localStorage.getItem("access-token");
+        const client = localStorage.getItem("client");
+        const uid = localStorage.getItem("uid");
+
+        // 認証情報がない場合は取得しない
+        if (!accessToken || !client || !uid) {
+          setGroups([]);
+          return;
+        }
+
+        const response = await fetch(`${API_BASE_URL}/api/v1/groups`, {
           headers: {
-            "access-token": localStorage.getItem("access-token") || "",
-            client: localStorage.getItem("client") || "",
-            uid: localStorage.getItem("uid") || "",
+            "access-token": accessToken,
+            client: client,
+            uid: uid,
           },
         });
-        if (response.ok) {
-          const data = await response.json();
-          setGroups(data);
+
+        if (!response.ok) {
+          console.error("グループ取得エラー:", response.status);
+          return;
         }
+
+        const data = await response.json();
+        setGroups(data);
       } catch (error) {
         console.error("グループの取得に失敗しました", error);
       }
     };
 
     fetchGroups();
-  }, [location]);
+  }, [location.pathname]);
 
   return (
-    // return <aside className="w-64 bg-gray-200 p-4">Sidebar</aside>;
     <aside className="w-64 bg-gray-800 text-white h-screen p-4">
-      {/* <h2 className="text-xl font-bold mb-6">サイドバー</h2> */}
-
       <nav>
         <p className="text-gray-400 text-xs uppercase mb-2">所属グループ</p>
+
         <ul className="space-y-2">
           {groups.length > 0 ? (
             groups.map((group) => (

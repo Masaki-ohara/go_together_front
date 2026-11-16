@@ -29,6 +29,7 @@
 // }
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import API_BASE_URL from "../../config/api";
 
 interface Plan {
   id: number;
@@ -48,7 +49,7 @@ export default function VoteRandom() {
   useEffect(() => {
     if (!groupId) return;
 
-    fetch(`http://localhost:3000/api/v1/groups/${groupId}`, {
+    fetch(`${API_BASE_URL}/api/v1/groups/${groupId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -104,19 +105,16 @@ export default function VoteRandom() {
       setDisplayPlanName(finalWinner.title);
 
       // 💡 1. データベースに勝者を保存するAPIを叩く
-      fetch(
-        `http://localhost:3000/api/v1/plans/${finalWinner.id}/select_winner`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "access-token": localStorage.getItem("access-token") || "",
-            client: localStorage.getItem("client") || "",
-            uid: localStorage.getItem("uid") || "",
-          },
-          body: JSON.stringify({ plan_id: finalWinner.id }),
+      fetch(`${API_BASE_URL}/api/v1/plans/${finalWinner.id}/select_winner`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token") || "",
+          client: localStorage.getItem("client") || "",
+          uid: localStorage.getItem("uid") || "",
         },
-      )
+        body: JSON.stringify({ plan_id: finalWinner.id }),
+      })
         .then((res) => {
           if (!res.ok) {
             console.error("勝者の保存に失敗しました");

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { saveAuthHeaders } from "../../utils/auth";
+import API_BASE_URL from "../../config/api";
 
 interface ScheduleItem {
   id: number;
@@ -34,7 +35,7 @@ export default function ScheduleList() {
 
     try {
       const res = await fetch(
-        `http://localhost:3000/api/v1/groups/${numericGroupId}/schedules`,
+        `${API_BASE_URL}/api/v1/groups/${numericGroupId}/schedules`,
         {
           headers: {
             "access-token": localStorage.getItem("access-token") || "",

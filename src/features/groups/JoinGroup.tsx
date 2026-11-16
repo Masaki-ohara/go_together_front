@@ -1,6 +1,7 @@
 // src/features/groups/JoinGroup.tsx
 // import { useParams, useNavigate } from "react-router-dom";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import API_BASE_URL from "../../config/api";
 
 export default function JoinGroup() {
   const [searchParams] = useSearchParams();
@@ -12,7 +13,7 @@ export default function JoinGroup() {
       alert("招待トークンが見つかりません。");
       return;
     }
-    const res = await fetch("http://localhost:3000/api/v1/groups/join", {
+    const res = await fetch(`${API_BASE_URL}/api/v1/groups/join`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

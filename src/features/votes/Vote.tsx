@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BackButton from "../../components/common/BackButton";
+import API_BASE_URL from "../../config/api";
 
 interface PlanVote {
   id: number;
@@ -46,7 +47,7 @@ export default function Vote() {
     try {
       // 📡 3. バックグラウンドで Rails へPOSTリクエストを送る
       const response = await fetch(
-        `http://localhost:3000/api/v1/plans/${planId}/votes`,
+        `${API_BASE_URL}/api/v1/plans/${planId}/votes`,
         {
           method: "POST",
           headers: {
@@ -112,7 +113,7 @@ export default function Vote() {
     const fetchVotePlans = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/v1/groups/${groupId}`,
+          `${API_BASE_URL}/api/v1/groups/${groupId}`,
           {
             headers: {
               "access-token": localStorage.getItem("access-token") || "",

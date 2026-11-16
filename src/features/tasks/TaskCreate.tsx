@@ -1,88 +1,7 @@
-// import React, { useState } from "react";
-// import { useParams, useNavigate } from "react-router-dom";
-
-// export default function TaskCreate() {
-//   const { groupId, scheduleId } = useParams<{
-//     groupId: string;
-//     scheduleId: string;
-//   }>();
-//   const navigate = useNavigate();
-//   const [role, setRole] = useState("");
-//   const [description, setDescription] = useState("");
-
-//   const handleCreateTask = async () => {
-//     if (!groupId || !scheduleId) {
-//       alert("グループIDまたはスケジュールIDが無効です");
-//       return;
-//     }
-
-//     try {
-//       const response = await fetch(
-//         `http://localhost:3000/api/v1/groups/${groupId}/schedules/${scheduleId}/tasks`,
-//         {
-//           method: "POST",
-//           headers: {
-//             "Content-Type": "application/json",
-//             "access-token": localStorage.getItem("access-token") || "",
-//             client: localStorage.getItem("client") || "",
-//             uid: localStorage.getItem("uid") || "",
-//           },
-//           body: JSON.stringify({
-//             task: {
-//               role,
-//               description,
-//             },
-//           }),
-//         },
-//       );
-
-//       if (!response.ok) {
-//         throw new Error("タスクの作成に失敗しました");
-//       }
-
-//       // タスク作成後、スケジュール詳細ページに遷移
-//       navigate(`/groups/${groupId}/schedules/${scheduleId}`);
-//     } catch (error) {
-//       console.error(error);
-//       alert("タスクの作成に失敗しました");
-//     }
-//   };
-
-//   return (
-//     <div className="p-4">
-//       <h2 className="text-xl font-bold mb-4">タスクを作成</h2>
-//       <div className="mb-4">
-//         <label className="block mb-1">役割</label>
-//         <input
-//           type="text"
-//           value={role}
-//           onChange={(e) => setRole(e.target.value)}
-//           className="w-full border border-gray-300 rounded px-3 py-2"
-//         />
-//       </div>
-
-//       {/* ⭕️ divタグの閉じ方を修正 */}
-//       <div className="mb-4">
-//         <label className="block mb-1">説明</label>
-//         <textarea
-//           value={description}
-//           onChange={(e) => setDescription(e.target.value)}
-//           className="w-full border border-gray-300 rounded px-3 py-2"
-//         />
-//       </div>
-
-//       <button
-//         onClick={handleCreateTask}
-//         className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-//       >
-//         タスクを作成
-//       </button>
-//     </div>
-//   );
-// }
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import API_BASE_URL from "../../config/api";
 // ユーザーの型定義
 interface User {
   id: number;
@@ -109,7 +28,7 @@ export default function TaskCreate() {
     const fetchGroupMembers = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/v1/groups/${groupId}`,
+          `${API_BASE_URL}/api/v1/groups/${groupId}`,
           {
             headers: {
               "access-token": localStorage.getItem("access-token") || "",
@@ -138,7 +57,7 @@ export default function TaskCreate() {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/v1/groups/${groupId}/schedules/${scheduleId}/tasks`,
+        `${API_BASE_URL}/api/v1/groups/${groupId}/schedules/${scheduleId}/tasks`,
         {
           method: "POST",
           headers: {

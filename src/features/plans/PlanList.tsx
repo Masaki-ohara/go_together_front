@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { saveAuthHeaders } from "../../utils/auth";
+import API_BASE_URL from "../../config/api";
 
 interface Plan {
   id: number;
@@ -27,7 +28,7 @@ export default function PlanList() {
     try {
       const res = await fetch(
         // `http://localhost:3000/api/v1/groups/${numericGroupId}/plans`,
-        `http://localhost:3000/api/v1/groups/${numericGroupId}`,
+        `${API_BASE_URL}/api/v1/groups/${numericGroupId}`,
         {
           headers: {
             "access-token": localStorage.getItem("access-token") || "",
@@ -84,7 +85,7 @@ export default function PlanList() {
     }
 
     try {
-      const res = await fetch(`http://localhost:3000/api/v1/plans/${planId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/v1/plans/${planId}`, {
         method: "DELETE",
         headers: {
           "access-token": localStorage.getItem("access-token") || "",

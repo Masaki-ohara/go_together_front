@@ -3,33 +3,26 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import API_BASE_URL from "../config/api";
 
 export default function Login() {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
-  // const onSubmit = async (data: any) => {
-  //   try {
-  //     const res = await axios.post(
-  //       "http://localhost:3000/api/v1/auth/sign_in",
-  //       data,
-  //     );
-
-  //     localStorage.setItem("access-token", res.headers["access-token"]);
-  //     localStorage.setItem("client", res.headers["client"]);
-  //     localStorage.setItem("uid", res.headers["uid"]);
-
-  //     toast.success("ログインしました");
-  //     navigate("/");
-  //   } catch (error) {
-  //     toast.error("ログインに失敗しました");
-  //   }
-  // };
   const onSubmit = async (data: any) => {
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/v1/auth/sign_in",
-        data, // { email, password } が直接送られます
+        `${API_BASE_URL}/api/v1/auth/sign_in`,
+        {
+          email: data.email,
+          password: data.password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        },
       );
 
       // axiosの場合、ヘッダーは res.headers["key"] で取得します。
@@ -71,10 +64,14 @@ export default function Login() {
         toast.error("ログインは成功しましたが、認証情報を取得できませんでした");
       }
     } catch (error: any) {
-      console.error("Login Error:", error.response?.data || error.message);
-      toast.error(
-        "ログインに失敗しました。メールアドレスかパスワードを確認してください",
+      console.error("Login Status:", error.response?.status);
+
+      console.error(
+        "Login Error:",
+        JSON.stringify(error.response?.data, null, 2),
       );
+
+      toast.error("ログインに失敗しました");
     }
   };
 

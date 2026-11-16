@@ -304,6 +304,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PlanEditForm from "./PlanEditForm";
+import API_BASE_URL from "../../config/api";
 
 // ⭕️ 時間帯のキーを日本語ラベルに変換する辞書
 const TIME_LABELS: Record<string, string> = {
@@ -333,7 +334,7 @@ export default function PlanDetail() {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/v1/plans/${id}`, {
+    fetch(`${API_BASE_URL}/api/v1/plans/${id}`, {
       headers: {
         "access-token": localStorage.getItem("access-token") || "",
         client: localStorage.getItem("client") || "",

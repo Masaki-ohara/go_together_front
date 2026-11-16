@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API_BASE_URL from "../../config/api";
 
 export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
   const navigate = useNavigate();
@@ -112,22 +113,19 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
       //     console.error("プランの更新に失敗しました", error);
       //   }
       // };
-      const response = await fetch(
-        `http://localhost:3000/api/v1/plans/${plan.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            // --- 認証ヘッダーを追加 ---
-            "access-token": localStorage.getItem("access-token") || "",
-            client: localStorage.getItem("client") || "",
-            uid: localStorage.getItem("uid") || "",
-          },
-          body: JSON.stringify({
-            plan: payload,
-          }),
+      const response = await fetch(`${API_BASE_URL}/api/v1/plans/${plan.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          // --- 認証ヘッダーを追加 ---
+          "access-token": localStorage.getItem("access-token") || "",
+          client: localStorage.getItem("client") || "",
+          uid: localStorage.getItem("uid") || "",
         },
-      );
+        body: JSON.stringify({
+          plan: payload,
+        }),
+      });
 
       // --- 401エラー（ログイン切れ）のハンドリング ---
       if (response.status === 401) {
