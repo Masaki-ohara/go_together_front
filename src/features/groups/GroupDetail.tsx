@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; // URLのIDを取得するため
 import { Link } from "react-router-dom"; // プラン一覧へのリンク用
 import { toast } from "react-toastify";
+import API_BASE_URL from "../../config/api";
 
 export default function GroupDetail() {
   // ⭕️ ルーティングの設定に合わせて 'groupId' で受け取るように修正！
@@ -16,7 +17,7 @@ export default function GroupDetail() {
       try {
         // ⭕️ URLの末尾を groupId に修正
         const response = await fetch(
-          `http://localhost:3000/api/v1/groups/${groupId}`,
+          `${API_BASE_URL}/api/v1/groups/${groupId}`,
           {
             headers: {
               "access-token": localStorage.getItem("access-token") || "",
@@ -103,25 +104,6 @@ export default function GroupDetail() {
         </div>
       )}
 
-      {/* 
-      <div className="mt-6">
-        <Link
-          to={`/groups/${group.id}/plans`}
-          className="block p-2 hover:bg-gray-700 rounded transition"
-        >
-          📝 プラン一覧
-        </Link>
-      </div>
-
-      <div className="mt-6">
-        <Link
-          to={`/groups/${group.id}/schedules`}
-          className="block p-2 hover:bg-gray-700 rounded transition"
-        >
-          🕒 しおり
-        </Link>
-      </div>
-    </div> */}
       {/* ナビゲーションリンクエリア */}
       <div className="mt-8 space-y-3">
         {/* ⭕️ プラン候補一覧ボタン（現在検討中の回数を表示） */}

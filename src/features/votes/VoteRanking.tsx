@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import confetti from "canvas-confetti";
+import API_BASE_URL from "../../config/api";
 
 interface PlanVote {
   id: number;
@@ -25,12 +26,12 @@ export default function VoteRanking() {
   const [isOwner, setIsOwner] = useState(false);
 
   // 💡 締め切り判定
-  // const isBeforeDeadline = groupDeadline
-  //   ? groupDeadline.substring(0, 10) > todayStr
-  //   : false;
+  const isBeforeDeadline = groupDeadline
+    ? groupDeadline.substring(0, 10) > todayStr
+    : false;
 
   // テスト用
-  const isBeforeDeadline = false;
+  // const isBeforeDeadline = false;
 
   useEffect(() => {
     if (!groupId) return;
@@ -38,7 +39,7 @@ export default function VoteRanking() {
     const fetchResults = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/v1/groups/${groupId}`,
+          `${API_BASE_URL}/api/v1/groups/${groupId}`,
           {
             headers: {
               "access-token": localStorage.getItem("access-token") || "",

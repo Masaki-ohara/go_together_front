@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import BackButton from "../../components/common/BackButton";
 import { Link } from "react-router-dom";
+import API_BASE_URL from "../../config/api";
 
 type Plan = {
   id: number;
@@ -38,7 +39,7 @@ export default function ScheduleBoard() {
       try {
         const response = await fetch(
           // `http://localhost:3000/api/v1/groups/${groupId}/schedules`,
-          `http://localhost:3000/api/v1/groups/${groupId}/schedules/${id}`,
+          `${API_BASE_URL}/api/v1/groups/${groupId}/schedules/${id}`,
           {
             headers: {
               "access-token": localStorage.getItem("access-token") || "",

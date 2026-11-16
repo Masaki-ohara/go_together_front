@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
+import API_BASE_URL from "../../config/api";
 
 // ⭕️ 時間帯の日本語変換辞書を復活
 const TIME_LABELS: Record<string, string> = {
@@ -37,7 +38,7 @@ export default function Schedule() {
     }
 
     // 選択されたプランIDの詳細を確実にフェッチする
-    fetch(`http://localhost:3000/api/v1/plans/${currentPlan.id}`, {
+    fetch(`${API_BASE_URL}/api/v1/plans/${currentPlan.id}`, {
       headers: {
         "access-token": localStorage.getItem("access-token") || "",
         client: localStorage.getItem("client") || "",
@@ -58,7 +59,7 @@ export default function Schedule() {
 
   // プラン詳細をフェッチする共通関数
   const fetchPlanDetail = (planId: number | string) => {
-    fetch(`http://localhost:3000/api/v1/plans/${planId}`, {
+    fetch(`${API_BASE_URL}/api/v1/plans/${planId}`, {
       headers: {
         "access-token": localStorage.getItem("access-token") || "",
         client: localStorage.getItem("client") || "",
@@ -110,7 +111,7 @@ export default function Schedule() {
     try {
       // 💡 スケジュール用のAPI（/api/v1/groups/:groupId/schedules）にPOST送信する
       const response = await fetch(
-        `http://localhost:3000/api/v1/groups/${groupId}/schedules`,
+        `${API_BASE_URL}/api/v1/groups/${groupId}/schedules`,
         {
           method: "POST", // SchedulesController#create を呼び出す
           headers: {

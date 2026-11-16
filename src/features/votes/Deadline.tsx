@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BackButton from "../../components/common/BackButton";
+import API_BASE_URL from "../../config/api";
 
 export default function Deadline() {
   const { groupId } = useParams<{ groupId: string }>(); // 💡 URLから :groupId を取得
@@ -12,7 +13,7 @@ export default function Deadline() {
   useEffect(() => {
     if (!groupId) return;
 
-    fetch(`http://localhost:3000/api/v1/groups/${groupId}`, {
+    fetch(`${API_BASE_URL}/api/v1/groups/${groupId}`, {
       headers: {
         "access-token": localStorage.getItem("access-token") || "",
         client: localStorage.getItem("client") || "",
@@ -38,23 +39,20 @@ export default function Deadline() {
 
     try {
       // 📡 RailsのGroup更新API（PUT /api/v1/groups/:id）を叩く
-      const res = await fetch(
-        `http://localhost:3000/api/v1/groups/${groupId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "access-token": localStorage.getItem("access-token") || "",
-            client: localStorage.getItem("client") || "",
-            uid: localStorage.getItem("uid") || "",
-          },
-          body: JSON.stringify({
-            group: {
-              deadline: deadline, // 👈 選択した日付を送信
-            },
-          }),
+      const res = await fetch(`${API_BASE_URL}/api/v1/groups/${groupId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token") || "",
+          client: localStorage.getItem("client") || "",
+          uid: localStorage.getItem("uid") || "",
         },
-      );
+        body: JSON.stringify({
+          group: {
+            deadline: deadline, // 👈 選択した日付を送信
+          },
+        }),
+      });
 
       if (!res.ok) {
         alert("期限の設定に失敗しました。");

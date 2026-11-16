@@ -167,6 +167,7 @@ import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import { toast } from "react-toastify";
 import Loading from "../../components/Loading";
+import API_BASE_URL from "../../config/api";
 
 type AiPlanFormData = {
   location: string;
@@ -197,7 +198,7 @@ export default function AiPlanForm() {
     console.log("送信データ:", data);
     try {
       const response = await fetch(
-        `http://localhost:3000/api/v1/groups/${groupId}/ai_plans`,
+        `${API_BASE_URL}/api/v1/groups/${groupId}/ai_plans`,
         {
           method: "POST",
           headers: {

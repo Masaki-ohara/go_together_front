@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import API_BASE_URL from "../../config/api";
 
 // ユーザーの型定義
 interface User {
@@ -12,18 +13,16 @@ export default function TaskEdit() {
   const { groupId, scheduleId, taskId } = useParams<{
     groupId: string;
     scheduleId: string;
-    taskId: string; // 👈 編集対象のタスクIDをURLから受け取る
+    taskId: string;
   }>();
   const navigate = useNavigate();
   const [role, setRole] = useState("");
   const [description, setDescription] = useState("");
 
-  // 👥 担当者選択用の状態
   const [members, setMembers] = useState<User[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<string>("");
   const [error, setError] = useState<string>("");
 
-  // 🔄 1. グループメンバー一覧 と 2. 既存のタスクデータを同時に取得する
   useEffect(() => {
     if (!groupId || !scheduleId || !taskId) return;
 
@@ -31,7 +30,7 @@ export default function TaskEdit() {
       try {
         // グループメンバーとタスク詳細を並行して取得
         const [groupRes, taskRes] = await Promise.all([
-          fetch(`http://localhost:3000/api/v1/groups/${groupId}`, {
+          fetch(`${API_BASE_URL}/api/v1/groups/${groupId}`, {
             headers: {
               "access-token": localStorage.getItem("access-token") || "",
               client: localStorage.getItem("client") || "",
@@ -39,7 +38,7 @@ export default function TaskEdit() {
             },
           }),
           fetch(
-            `http://localhost:3000/api/v1/groups/${groupId}/schedules/${scheduleId}/tasks/${taskId}`,
+            `${API_BASE_URL}/api/v1/groups/${groupId}/schedules/${scheduleId}/tasks/${taskId}`,
             {
               headers: {
                 "access-token": localStorage.getItem("access-token") || "",
@@ -82,7 +81,7 @@ export default function TaskEdit() {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/v1/groups/${groupId}/schedules/${scheduleId}/tasks/${taskId}`,
+        `${API_BASE_URL}/api/v1/groups/${groupId}/schedules/${scheduleId}/tasks/${taskId}`,
         {
           method: "PATCH", // 👈 編集なので PATCH
           headers: {

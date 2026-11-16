@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import BackButton from "../../components/common/BackButton";
+import API_BASE_URL from "../../config/api";
 
 type FormValues = {
   title: string;
@@ -65,7 +66,7 @@ export default function PlanForm() {
       };
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/groups/${groupId}/plans`,
+        `${API_BASE_URL}/api/v1/groups/${groupId}/plans`,
         {
           method: "POST",
           headers: {
