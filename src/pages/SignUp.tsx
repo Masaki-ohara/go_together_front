@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import API_BASE_URL from "../config/api";
 
 type FormValues = {
   name: string;
@@ -93,7 +94,7 @@ export default function SignUp() {
       formData.append("image", data.image[0]);
     }
     try {
-      const res = await fetch("http://localhost:3000/api/v1/auth", {
+      const res = await fetch(`${API_BASE_URL}/api/v1/auth`, {
         method: "POST",
         body: formData,
       });
