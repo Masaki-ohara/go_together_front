@@ -1,6 +1,5 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import BackButton from "../../components/common/BackButton";
 import API_BASE_URL from "../../config/api";
 
@@ -27,7 +26,6 @@ export default function Vote() {
   const navigate = useNavigate();
 
   const isExpired = group?.deadline ? todayStr > group.deadline : false;
-  const clickBack = () => navigate(-1);
 
   // 🎯 RailsのAPIを叩いて投票する関数
   const handleVote = async (planId: number) => {
@@ -89,7 +87,6 @@ export default function Vote() {
       }
     } catch (error) {
       console.error("投票通信エラー:", error);
-      clearTimeout(timeoutId);
       setSuccess(false);
 
       // 通信切断などのエラー時も数値を元に戻す

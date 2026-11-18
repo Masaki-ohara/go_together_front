@@ -1,13 +1,10 @@
-import React from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import API_BASE_URL from "../config/api";
 
 export default function Login() {
   const { register, handleSubmit } = useForm();
-  const navigate = useNavigate();
 
   const onSubmit = async (data: any) => {
     try {
@@ -33,14 +30,6 @@ export default function Login() {
         localStorage.setItem("access-token", headers["access-token"]);
         localStorage.setItem("client", headers["client"]);
         localStorage.setItem("uid", headers["uid"]);
-
-        const userData = res.data.data;
-
-        // if (res.data && res.data.data && res.data.data.name) {
-        //   localStorage.setItem("name", res.data.data.name);
-        // } else {
-        //   localStorage.setItem("name", res.data.data.email);
-        // }
 
         // toast.success("ログインしました 🎉");
         // navigate("/");

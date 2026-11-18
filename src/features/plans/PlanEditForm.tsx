@@ -1,24 +1,49 @@
-import React, { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../config/api";
 
-export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
+interface PlanItem {
+  id?: number;
+  content: string;
+  time?: string;
+  category?: string;
+  _destroy?: boolean;
+}
+
+interface Plan {
+  id: number;
+  title: string;
+  location: string;
+  budget: number;
+  time?: string;
+  plan_items?: PlanItem[];
+}
+
+interface PlanEditFormProps {
+  plan: Plan;
+  onCancel: () => void;
+  onUpdate: (updatedPlan: Plan) => void;
+}
+
+export default function PlanEditForm({
+  plan,
+  onCancel,
+  onUpdate,
+}: PlanEditFormProps) {
   const navigate = useNavigate();
   const [title, setTitle] = useState(plan.title);
   const [location, setLocation] = useState(plan.location);
-  const [budget, setBudget] = useState(plan.budget);
-  // const [items, setItems] = useState(plan.plan_items || []);
-  const [time, setTime] = useState(plan.time || "");
+  const [budget, setBudget] = useState(String(plan.budget));
 
-  const [items, setItems] = useState(
-    (plan.plan_items || []).map((item: any) => ({
+  const [items, setItems] = useState<PlanItem[]>(
+    (plan.plan_items || []).map((item) => ({
       ...item,
       time: item.category || item.time || "lunch",
     })),
   );
 
   const addItem = () => {
-    if (items.length >= 5) {
+    if (items.filter((item) => !item._destroy).length >= 5) {
       alert("やりたいことは5個までです！");
       return;
     }
@@ -27,20 +52,14 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
 
   const updateItem = (index: number, value: string) => {
     const newItems = [...items];
-    newItems[index].time = value;
-    newItems[index].category = value;
     newItems[index].content = value;
     setItems(newItems);
   };
 
-  // const updateTime = (value: string) => {
-  //   const newTime = [...time];
-  //   newTimes[index].content = value;
-  //   setTime(value);
-  // };
   const updateItemTime = (index: number, value: string) => {
     const newItems = [...items];
-    newItems[index].time = value; // ⭕️ 安全にその行の時間帯だけを上書き
+    newItems[index].time = value;
+    newItems[index].category = value;
     setItems(newItems);
   };
 
@@ -64,22 +83,24 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
 
     setItems(newItems);
   };
-  const handleSubmit = async (e: React.FormEvent) => {
-    if (!title || !location || !budget) {
-      alert("全て入力してください");
-      return;
-    }
-    if (items.some((item) => !item.content)) {
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (items.some((item) => !item._destroy && !item.content.trim())) {
       alert("やりたいことリスト全て入力してください");
       return;
     }
 
-    e.preventDefault();
+    if (!title || !location || !budget) {
+      alert("全て入力してください");
+      return;
+    }
+
     try {
       const payload = {
         title,
         location,
-        budget,
+        budget: Number(budget),
         plan_items_attributes: items.map((item) => ({
           id: item.id,
           content: item.content,
@@ -89,30 +110,6 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
         })),
       };
 
-      //     const response = await fetch(
-      //       `http://localhost:3000/api/v1/plans/${plan.id}`,
-      //       {
-      //         method: "PUT",
-      //         headers: {
-      //           "Content-Type": "application/json",
-      //         },
-      //         body: JSON.stringify({
-      //           plan: payload,
-      //         }),
-      //       },
-      //     );
-
-      //     if (!response.ok) {
-      //       throw new Error("更新に失敗しました");
-      //     }
-
-      //     const updatedPlan = await response.json();
-      //     onUpdate(updatedPlan);
-      //     onCancel();
-      //   } catch (error) {
-      //     console.error("プランの更新に失敗しました", error);
-      //   }
-      // };
       const response = await fetch(`${API_BASE_URL}/api/v1/plans/${plan.id}`, {
         method: "PUT",
         headers: {
@@ -148,10 +145,6 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
       console.error("プランの更新に失敗しました", error);
       alert("プランの更新に失敗しました");
     }
-  };
-
-  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTime(e.target.value);
   };
 
   return (
@@ -197,9 +190,8 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
         </div>
         <p className="text-gray-400 text-sm">やりたいことリスト</p>
 
-        {items
-          .filter((item) => !item._destroy)
-          .map((item, index) => (
+        {items.map((item, index) =>
+          item._destroy ? null : (
             <div key={item.id || index} className="flex gap-2 items-center">
               <input
                 type="text"
@@ -223,27 +215,6 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
                 <option value="night">🌙 夜食</option>
               </select>
 
-              {/* 
-              {time
-                .filter((time) => !time._destroy)
-                .map((time, index) => (
-                  <div
-                    key={time.id || index}
-                    className="flex gap-2 items-center"
-                  >
-                    <input
-                      type="text"
-                      value={time.content || ""}
-                      onChange={(e) => {
-                        const newTimes = [...time];
-                        newTimes[index].content = e.target.value;
-                        setTime(newTimes);
-                      }}
-                      className="flex-1 border border-gray-300 rounded px-3 py-2 focus:border-blue-500"
-                    />
-                  </div>
-                ))} */}
-
               <div className="flex items-center gap-3">
                 <button
                   type="button"
@@ -254,7 +225,8 @@ export default function PlanEditForm({ plan, onCancel, onUpdate }: any) {
                 </button>
               </div>
             </div>
-          ))}
+          ),
+        )}
 
         <button
           type="button"

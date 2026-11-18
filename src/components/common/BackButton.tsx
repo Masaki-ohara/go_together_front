@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
 // 💡 外部からボタンの文字やスタイルを少し変えられるように設計します

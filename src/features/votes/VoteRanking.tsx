@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, Link, useLocation } from "react-router-dom";
 import confetti from "canvas-confetti";
 import API_BASE_URL from "../../config/api";
 
@@ -12,7 +12,6 @@ interface PlanVote {
 
 export default function VoteRanking() {
   const { groupId } = useParams();
-  const navigate = useNavigate();
   const [plans, setPlans] = useState<PlanVote[]>([]);
   const [groupName, setGroupName] = useState("");
   const [loading, setLoading] = useState(true);

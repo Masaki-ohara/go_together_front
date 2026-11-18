@@ -15,8 +15,8 @@ export default function GroupList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const [link, setLink] = useState("");
-  const [shareToken, setShareToken] = useState("");
+  // const [link, setLink] = useState("");
+  // const [shareToken, setShareToken] = useState("");
 
   useEffect(() => {
     const fetchGroups = async () => {

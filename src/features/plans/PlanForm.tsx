@@ -94,7 +94,8 @@ export default function PlanForm() {
     }
   };
 
-  const today = new Date().toLocaleDateString("sv-SE");
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
   const TimeSelect = ({
     name,
     isRequired = false,
@@ -227,6 +228,7 @@ export default function PlanForm() {
           placeholder="予算を入力してください"
           {...register("budget", {
             required: "予算は必須です",
+            valueAsNumber: true,
             min: { value: 0, message: "0以上で入力してください" },
           })}
           className="bg-gray-300 appearance-none border-2 border-gray-400 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 transition duration-200"
