@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { saveAuthHeaders } from "../../utils/auth";
 import API_BASE_URL from "../../config/api";

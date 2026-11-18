@@ -1,12 +1,11 @@
-import React, { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import BackButton from "../../components/common/BackButton";
 import API_BASE_URL from "../../config/api";
 
 export default function Deadline() {
   const { groupId } = useParams<{ groupId: string }>(); // 💡 URLから :groupId を取得
   const navigate = useNavigate();
-  const [deadline, setDeadline] = React.useState("");
+  const [deadline, setDeadline] = useState("");
 
   const clickBack = () => navigate(`/groups/${groupId}/plans`);
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; // URLのIDを取得するため
 import { Link } from "react-router-dom"; // プラン一覧へのリンク用
 import { toast } from "react-toastify";

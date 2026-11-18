@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
@@ -56,25 +56,6 @@ export default function Schedule() {
       })
       .finally(() => setLoading(false));
   }, [location.state]);
-
-  // プラン詳細をフェッチする共通関数
-  const fetchPlanDetail = (planId: number | string) => {
-    fetch(`${API_BASE_URL}/api/v1/plans/${planId}`, {
-      headers: {
-        "access-token": localStorage.getItem("access-token") || "",
-        client: localStorage.getItem("client") || "",
-        uid: localStorage.getItem("uid") || "",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setPlan(data);
-        const planItems = data.plan_items || [];
-        setItems(sortItemsByTime(planItems));
-      })
-      .catch((err) => console.error(err))
-      .finally(() => setLoading(false));
-  };
 
   // 開始時間で昇順ソート
   const sortItemsByTime = (itemList: any[]) => {
