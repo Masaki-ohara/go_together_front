@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import API_BASE_URL from "../config/api";
 
 export default function Header() {
   const { groupId } = useParams();
@@ -47,19 +48,29 @@ export default function Header() {
     }
   };
 
-  // 💡 GroupDetail.tsx と同じ画像URL整形ロジック
+  // 画像URLを環境に応じて整形する
   const getImageUrl = () => {
     if (!userImage) return null;
-    if (userImage.startsWith("http")) return userImage;
-    // 相対パスの場合は http://localhost:3000 を補完
-    return `http://localhost:3000${userImage.startsWith("/") ? "" : "/"}${userImage}`;
+
+    // localhostのURLが保存されていた場合は環境に応じて置き換える
+    if (userImage.startsWith("http://localhost:3000")) {
+      return userImage.replace("http://localhost:3000", API_BASE_URL);
+    }
+    if (userImage.startsWith("/")) {
+      return `${API_BASE_URL}${userImage}`;
+    }
+
+    if (userImage.startsWith("http://") || userImage.startsWith("https://")) {
+      return userImage;
+    }
+    return `${API_BASE_URL}/${userImage}`;
   };
 
   const imageUrl = getImageUrl();
 
   return (
     <header className="h-14 bg-sky-600 text-white flex items-center px-4 justify-between">
-      {/* --- 左側：画像と名前のエリア --- */}
+      {/* 左側：画像と名前のエリア */}
       <div className="flex items-center gap-3">
         {isLoggedIn ? (
           <div className="w-10 h-10 rounded-full bg-sky-700 flex items-center justify-center text-white text-xl font-bold shrink-0 overflow-hidden border border-sky-400">
@@ -68,10 +79,10 @@ export default function Header() {
                 src={imageUrl}
                 alt={userName}
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  // 画像読み込みエラーが発生した場合は文字表示へフォールバック
+                onError={() => {
+                  // 画像読み込みエラー時は頭文字に切り替える
                   console.error("Header画像の読み込みエラー:", imageUrl);
-                  (e.target as HTMLElement).style.display = "none";
+                  setUserImage(null);
                 }}
               />
             ) : (
@@ -91,7 +102,7 @@ export default function Header() {
         </span>
       </div>
 
-      {/* --- 中央：検索フォーム と go_together --- */}
+      {/* 中央：go_together */}
       <div className="flex items-center gap-4">
         <div className="flex justify-center ml-4 font-bold tracking-wider">
           go_together
@@ -109,16 +120,17 @@ export default function Header() {
         </nav>
       </div>
 
+      {/* マイページ */}
       <nav className="ml-8 flex gap-4 text-sm font-medium">
         <Link
-          to={`/mypage`}
+          to="/mypage"
           className="hover:bg-sky-700 px-3 py-1 rounded transition"
         >
           マイページ
         </Link>
       </nav>
 
-      {/* --- 右側：ログイン・ログアウトボタン --- */}
+      {/* 右側：ログイン・ログアウトボタン */}
       <div className="ml-auto flex items-center">
         {isLoggedIn ? (
           <button
