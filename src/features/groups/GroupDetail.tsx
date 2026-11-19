@@ -66,7 +66,7 @@ export default function GroupDetail() {
                   src={
                     user.image.startsWith("http")
                       ? user.image
-                      : `http://localhost:3000${user.image}`
+                      : `${API_BASE_URL}${user.image}`
                   }
                   alt={user.name}
                   className="w-8 h-8 rounded-full object-cover"
